@@ -12,11 +12,11 @@ public class Login extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         
-        //I need help with this...
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.serverOptions, android.R.layout.simple_spinner_item );
-        adapter.setDropDownViewResource(R.layout.selectServer);
-        Spinner spinner = (Spinner) findViewById(R.id.selectServer);
-        spinner.setAdapter(adapter);
+        /*I need help with this...
+        *ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.serverOptions, android.R.layout.simple_spinner_item );
+        *adapter.setDropDownViewResource(R.layout.selectServer);
+        *Spinner spinner = (Spinner) findViewById(R.id.selectServer);
+        *spinner.setAdapter(adapter);*/
         		
     }
 }
