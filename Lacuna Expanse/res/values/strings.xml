@@ -1,0 +1,14 @@
+<resources>
+
+    <string name="app_name">Lacuna Expanse</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_login">Login</string>
+    <string name="login">Login</string>
+    <string-array name="serverOptions">
+        <item >Select Server</item>
+        <item >US1</item>
+        <item >PT</item>
+    </string-array>
+
+</resources>
