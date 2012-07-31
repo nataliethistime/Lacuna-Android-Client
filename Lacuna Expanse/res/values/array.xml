@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="serverOptions">
+        <item >Select Server</item>
+        <item >US1</item>
+        <item >PT</item>
+    </string-array>    
+</resources>
