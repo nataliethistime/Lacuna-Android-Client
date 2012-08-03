@@ -1,6 +1,7 @@
 /*PLEASE NOTE:
  *This is a test to see if JSONRPC 2.0 requests (And the rest) will work!
  *It will (Most likely) end up changing or even re-written.
+ * Also, there will probably be a lot of code that has been commented out, put simply, I use a lot of trial and error...
  */
 
 package com.lacunaexpanse.LacunaAndroidClient;
@@ -16,6 +17,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -25,6 +27,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.thetransactioncompany.jsonrpc2.client.*;
+import com.thetransactioncompany.jsonrpc2.*;
+import net.minidev.json.*;
+import java.net.*;
 
 public class Login extends Activity {
 
@@ -47,7 +54,11 @@ public class Login extends Activity {
 				EditText passWordField = (EditText) findViewById(R.id.passWordField);
 				String empirePassword = passWordField.getText().toString();
 
-				if (empireName.length() <= 0) {
+				/*Not implemented yet:
+				if (selectedServer == "Select server") {
+					toast("Please select a server",Toast.LENGTH_SHORT);
+				}
+				else */if (empireName.length() <= 0) {
 					toast("Please enter your Empire Name", Toast.LENGTH_SHORT);
 				} 
 				else if (empirePassword.length() <= 0) { 
@@ -57,39 +68,61 @@ public class Login extends Activity {
 					// Doing this to make sure things are working properly...
 					toast("The empire name and password you entered is " + empireName + " " + empirePassword, Toast.LENGTH_LONG);
 					
-					// Right, let's get started with the server request and whatever...
-					String result = "";
-					// Don't know what the API key is as yet, need to create one still...
-					String apiKey = "";
+					URL serverURL = null;
+					String selectedServer = "us1";
 					
-					// Create JSON data for sending
-					JSONObject requestBuilder = new JSONObject();
-					requestBuilder.put("jsonrpc", "2.0");
-					requestBuilder.put("id", "1");
-					requestBuilder.put("method","login");
-					requestBuilder.put("params","[\"" + empireName + "\",\"" + empirePassword + "\",\"" + apiKey + "\"]");
-					
-					String request = requestBuilder.toString();
-					
-					/*ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-					
-					nameValuePairs.add(new BasicNameValuePair("jsonrpc", "2.0"));
-					nameValuePairs.add(new BasicNameValuePair("id", "1"));
-					nameValuePairs.add(new BasicNameValuePair("method", "login"));
-					nameValuePairs.add(new BasicNameValuePair("params", "[\"" + empireName + "\",\"" + empirePassword + "\",\"" + apiKey + "\"]"));
-					*/
-					
-					// Create and send the HTTP POST request
 					try {
-						HttpClient client = new DefaultHttpClient();
-						HttpPost httpPost = new HttpPost("http://us1.lacunaexpanse.com/empire");
-						httpPost.setEntity(new UrlEncodedFormEntity(request));
-						HttpResponse response = client.execute(httpPost);
-						HttpEntity entity = response.getEntity();
-						InputStream is = entity.getContent();
+						serverURL = new URL("http://" + selectedServer + ".lacunaexpanse.com/empire");// Not finished yet
 					}
-					catch (Exception e) {
-						toast("Error in HTTP connection: " + e.toString(), Toast.LENGTH_LONG);
+					catch (MalformedURLException e) {
+						toast("Error connecting to server: " + e.toString(),Toast.LENGTH_LONG);
+					}
+					String apiKey = "01420b89-22d4-437f-b355-b99df1f4c8ea";
+					
+					// Construct new HTTP POST request
+					String jsonrpc = "2.0";
+					String id = "1";
+					String method = "login";
+					String[] paramsBuilder = {empireName,empirePassword,apiKey};
+					String params = convertToString(paramsBuilder);
+					
+					toast(params,Toast.LENGTH_LONG);
+					
+					/*Just a few things to note from here on out:
+					 * US1 api keys:
+					 * Public Key:
+					 * 01420b89-22d4-437f-b355-b99df1f4c8ea 
+					 * Private Key:
+					 * 146abedc-70a3-4671-b0cd-a8abf6bf522f
+					 * 
+					 * PT api keys:
+					 * Public Key:
+					 * a6f619a8-1cd7-429b-8fbf-83ede625612c
+					 * Private Key:
+					 * 42165f49-a948-4192-a86b-28e8a04dfd1e 
+					 * 
+					 * At the moment I'm going to default the selected server to us1 (And the api key). 
+					 * I haven't worked out how to get the selected option from a Spinner
+					 */
+					
+					JSONRPC2Session serverSession = new JSONRPC2Session(serverURL);
+					JSONRPC2Request request = new JSONRPC2Request(method,params);
+					
+					// Send request
+					JSONRPC2Response response = null;
+
+					try {
+						response = serverSession.send(request);
+					}
+					catch (JSONRPC2SessionException e) {
+						toast("Error in comminication with server: " + e.getMessage().toString(),Toast.LENGTH_SHORT);
+					}
+					// Print response result / error
+					 if (response.indicatesSuccess()) {
+						toast(response.getResult().toString(),Toast.LENGTH_LONG);
+					 }
+					else {
+						toast(response.getError().getMessage(),Toast.LENGTH_LONG);
 					}
 				}
 			}
@@ -107,5 +140,22 @@ public class Login extends Activity {
 		toast.show();
 
 		return true;
+	}
+	
+	private static String convertToString(String[] target) {
+		StringBuilder sbOne = new StringBuilder();
+		sbOne.append("[");
+		
+		for (int i = 0; i < target.length; i++) {
+			sbOne.append("\"" + target[i] + "\",");
+		}
+		
+		String resultOne = sbOne.toString();
+		resultOne = resultOne.substring(0, resultOne.length()-1);
+		
+		StringBuilder sbTwo = new StringBuilder(resultOne);
+		sbTwo.append("]");
+		String result = sbTwo.toString();
+		return result;
 	}
 }
