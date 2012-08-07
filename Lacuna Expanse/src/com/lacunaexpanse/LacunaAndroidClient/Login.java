@@ -1,17 +1,9 @@
-/*PLEASE NOTE:
- *This is a test to see if JSONRPC 2.0 requests (And the rest) will work!
- *It will (Most likely) end up changing or even re-written.
- * Also, there will probably be a lot of code that has been commented out, put simply, I use a lot of trial and error...
- */
-
 package com.lacunaexpanse.LacunaAndroidClient;
 
 import java.io.BufferedReader;
-//import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
-//import java.net.URISyntaxException;
 import java.net.URLEncoder;
 
 import org.apache.http.HttpResponse;
@@ -25,15 +17,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
-// import java.net.MalformedURLException;
-// import java.net.URL;
-// import net.minidev.json.JSONObject;
-
-// import com.thetransactioncompany.jsonrpc2.JSONRPC2Request;
-// import com.thetransactioncompany.jsonrpc2.JSONRPC2Response;
-// import com.thetransactioncompany.jsonrpc2.client.JSONRPC2Session;
-// import com.thetransactioncompany.jsonrpc2.client.JSONRPC2SessionException;
 
 public class Login extends Activity {
 
@@ -41,9 +26,6 @@ public class Login extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-
-		// Check if we can get the selected item from the spinner on the click
-		// of the button.
 
 		Button loginButton = (Button) findViewById(R.id.loginButton);
 
@@ -55,70 +37,51 @@ public class Login extends Activity {
 
 				EditText passWordField = (EditText) findViewById(R.id.passWordField);
 				String empirePassword = passWordField.getText().toString();
-
-				/*Not implemented yet:
-				if (selectedServer == "Select server") {
-					toast("Please select a server",Toast.LENGTH_SHORT);
+				
+				// Get selected item from Spinner
+				Spinner MySpinner = (Spinner) findViewById(R.id.selectServer);
+				int indexValue = MySpinner.getSelectedItemPosition();
+				
+				if (empireName.length() <= 0) {
+					toast("Please enter your empire name",Toast.LENGTH_SHORT);
 				}
-				else */if (empireName.length() <= 0) {
-					toast("Please enter your Empire Name", Toast.LENGTH_SHORT);
-				} 
-				else if (empirePassword.length() <= 0) { 
-					toast("Please enter you empire password", Toast.LENGTH_SHORT);
-				} 
+				else if (empirePassword.length() <= 0) {
+					toast("Please enter your empire password",Toast.LENGTH_SHORT);
+				}
 				else {
-					// Doing this to make sure things are working properly...
-					toast("The empire name and password you entered is " + empireName + " " + empirePassword, Toast.LENGTH_LONG);
+					// Set selectedServer and apiKey based on selected item in Spinner. Server defaults to US1
+					String selectedServer = "";
+					String apiKey = "";
+					if (indexValue == 0) {
+						toast("Please select a server",Toast.LENGTH_SHORT);
+					}
+					else if (indexValue == 1) {
+						selectedServer = "us1";
+						apiKey = "01420b89-22d4-437f-b355-b99df1f4c8ea";
+						toast("US1",Toast.LENGTH_SHORT);
+					}
+					else if (indexValue == 2) {
+						selectedServer = "pt";
+						apiKey = "a6f619a8-1cd7-429b-8fbf-83ede625612c";
+						toast("PT",Toast.LENGTH_SHORT);
+					}
+					else {
+						selectedServer = "us1";
+						apiKey = "01420b89-22d4-437f-b355-b99df1f4c8ea";
+						toast("US1",Toast.LENGTH_SHORT);
+					}
 					
-					String selectedServer = "us1";
-					String apiKey = "01420b89-22d4-437f-b355-b99df1f4c8ea";
+					// Create params and create GET url
 					String[] paramsBuilder = {empireName,empirePassword,apiKey};
 					String serverUrl = assembleGetUrl(selectedServer,"empire","login",convertToString(paramsBuilder));
 					
-					/*Just a few things to note from here on out:
-					 * US1 api keys:
-					 * Public Key:
-					 * 01420b89-22d4-437f-b355-b99df1f4c8ea 
-					 * Private Key:
-					 * 146abedc-70a3-4671-b0cd-a8abf6bf522f
-					 * 
-					 * PT api keys:
-					 * Public Key:
-					 * a6f619a8-1cd7-429b-8fbf-83ede625612c
-					 * Private Key:
-					 * 42165f49-a948-4192-a86b-28e8a04dfd1e 
-					 * 
-					 * At the moment I'm going to default the selected server to us1 (And the api key). 
-					 * I haven't worked out how to get the selected option from a Spinner
-					 */
+					// Send to server and toast result
+					String serverResponse = sendServerRequest(serverUrl);
+					toast(serverResponse,Toast.LENGTH_LONG);
 					
-					// Right, let's begin!
-					URI uri = null;
-					String returnedData = null;
 					
-					try {
-						HttpClient client = new DefaultHttpClient();
-						uri = new URI(serverUrl);
-						HttpGet request = new HttpGet();
-						request.setURI(uri);
-						HttpResponse response = client.execute(request);
-						BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-						StringBuffer sb = new StringBuffer("");
-						
-						String line = "";
-						
-						while ((line = in.readLine()) != null) {
-							sb.append(line + "\n");
-						}
-						
-						returnedData = sb.toString();
-						in.close();
-					}
-					catch (Exception e) {
-						toast("Error communicating with the server: " + e.toString(),Toast.LENGTH_LONG);
-					}
 					
-					toast(returnedData,Toast.LENGTH_LONG);
+					// "What's next?" I hear you ask, parsing JSON and handling errors...
 				}
 			}
 		});
@@ -168,5 +131,33 @@ public class Login extends Activity {
 		String finalURL = sb.toString();
 		
 		return finalURL;
+	}
+	private String sendServerRequest(String serverUrl) {
+		URI uri = null;
+		String receivedData = null;
+		
+		try {
+			HttpClient client = new DefaultHttpClient();
+			uri = new URI(serverUrl);
+			HttpGet request = new HttpGet();
+			request.setURI(uri);
+			HttpResponse response = client.execute(request);
+			BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+			StringBuffer sb = new StringBuffer("");
+			
+			String line = "";
+			
+			while ((line = in.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			
+			receivedData = sb.toString();
+			in.close();
+		}
+		catch (Exception e) {
+			toast("Error communicating with the server: " + e.toString(),Toast.LENGTH_LONG);
+		}
+		
+		return receivedData;
 	}
 }
