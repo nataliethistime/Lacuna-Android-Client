@@ -6,19 +6,18 @@
 
 package com.lacunaexpanse.LacunaAndroidClient;
 
-import java.io.InputStream;
-import java.util.ArrayList;
+import java.io.BufferedReader;
+//import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+//import java.net.URISyntaxException;
+import java.net.URLEncoder;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
@@ -27,11 +26,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+// import java.net.MalformedURLException;
+// import java.net.URL;
+// import net.minidev.json.JSONObject;
 
-import com.thetransactioncompany.jsonrpc2.client.*;
-import com.thetransactioncompany.jsonrpc2.*;
-import net.minidev.json.*;
-import java.net.*;
+// import com.thetransactioncompany.jsonrpc2.JSONRPC2Request;
+// import com.thetransactioncompany.jsonrpc2.JSONRPC2Response;
+// import com.thetransactioncompany.jsonrpc2.client.JSONRPC2Session;
+// import com.thetransactioncompany.jsonrpc2.client.JSONRPC2SessionException;
 
 public class Login extends Activity {
 
@@ -68,25 +70,10 @@ public class Login extends Activity {
 					// Doing this to make sure things are working properly...
 					toast("The empire name and password you entered is " + empireName + " " + empirePassword, Toast.LENGTH_LONG);
 					
-					URL serverURL = null;
 					String selectedServer = "us1";
-					
-					try {
-						serverURL = new URL("http://" + selectedServer + ".lacunaexpanse.com/empire");// Not finished yet
-					}
-					catch (MalformedURLException e) {
-						toast("Error connecting to server: " + e.toString(),Toast.LENGTH_LONG);
-					}
 					String apiKey = "01420b89-22d4-437f-b355-b99df1f4c8ea";
-					
-					// Construct new HTTP POST request
-					String jsonrpc = "2.0";
-					String id = "1";
-					String method = "login";
 					String[] paramsBuilder = {empireName,empirePassword,apiKey};
-					String params = convertToString(paramsBuilder);
-					
-					toast(params,Toast.LENGTH_LONG);
+					String serverUrl = assembleGetUrl(selectedServer,"empire","login",convertToString(paramsBuilder));
 					
 					/*Just a few things to note from here on out:
 					 * US1 api keys:
@@ -105,25 +92,33 @@ public class Login extends Activity {
 					 * I haven't worked out how to get the selected option from a Spinner
 					 */
 					
-					JSONRPC2Session serverSession = new JSONRPC2Session(serverURL);
-					JSONRPC2Request request = new JSONRPC2Request(method,params);
+					// Right, let's begin!
+					URI uri = null;
+					String returnedData = null;
 					
-					// Send request
-					JSONRPC2Response response = null;
-
 					try {
-						response = serverSession.send(request);
+						HttpClient client = new DefaultHttpClient();
+						uri = new URI(serverUrl);
+						HttpGet request = new HttpGet();
+						request.setURI(uri);
+						HttpResponse response = client.execute(request);
+						BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+						StringBuffer sb = new StringBuffer("");
+						
+						String line = "";
+						
+						while ((line = in.readLine()) != null) {
+							sb.append(line + "\n");
+						}
+						
+						returnedData = sb.toString();
+						in.close();
 					}
-					catch (JSONRPC2SessionException e) {
-						toast("Error in comminication with server: " + e.getMessage().toString(),Toast.LENGTH_SHORT);
+					catch (Exception e) {
+						toast("Error communicating with the server: " + e.toString(),Toast.LENGTH_LONG);
 					}
-					// Print response result / error
-					 if (response.indicatesSuccess()) {
-						toast(response.getResult().toString(),Toast.LENGTH_LONG);
-					 }
-					else {
-						toast(response.getError().getMessage(),Toast.LENGTH_LONG);
-					}
+					
+					toast(returnedData,Toast.LENGTH_LONG);
 				}
 			}
 		});
@@ -132,14 +127,12 @@ public class Login extends Activity {
 
 	
 	// Extra methods I don't know how to put in a separate class...
-	private boolean toast(String message, int duration) {
+	private void toast(String message, int duration) {
 		Context context = getApplicationContext();
 		CharSequence text = message;
 
 		Toast toast = Toast.makeText(context, text, duration);
 		toast.show();
-
-		return true;
 	}
 	
 	private static String convertToString(String[] target) {
@@ -156,6 +149,24 @@ public class Login extends Activity {
 		StringBuilder sbTwo = new StringBuilder(resultOne);
 		sbTwo.append("]");
 		String result = sbTwo.toString();
+		
 		return result;
+	}
+	
+	private static String assembleGetUrl(String selectedServer,String module,String method,String params) {
+		String encodedParams = null;
+		try {
+			encodedParams = URLEncoder.encode(params,"utf-8");
+		}
+		catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("http://" + selectedServer + ".lacunaexpanse.com/" + module + "?jsonrpc=2.0&id=1&method=" + method + "&params=" + encodedParams);
+		
+		String finalURL = sb.toString();
+		
+		return finalURL;
 	}
 }
