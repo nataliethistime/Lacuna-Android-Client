@@ -135,6 +135,7 @@ public class Login extends Activity {
 	private String sendServerRequest(String serverUrl) {
 		URI uri = null;
 		String receivedData = null;
+		String line = null;
 		
 		try {
 			HttpClient client = new DefaultHttpClient();
@@ -143,9 +144,7 @@ public class Login extends Activity {
 			request.setURI(uri);
 			HttpResponse response = client.execute(request);
 			BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-			StringBuffer sb = new StringBuffer("");
-			
-			String line = "";
+			StringBuilder sb = new StringBuilder();
 			
 			while ((line = in.readLine()) != null) {
 				sb.append(line + "\n");
