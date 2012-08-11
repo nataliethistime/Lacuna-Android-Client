@@ -50,8 +50,8 @@ public class Login extends Activity {
 				}
 				else {
 					// Set selectedServer and apiKey based on selected item in Spinner. Server defaults to US1
-					String selectedServer = "";
-					String apiKey = "";
+					String selectedServer = null;
+					String apiKey = null;
 					if (indexValue == 0) {
 						toast("Please select a server",Toast.LENGTH_SHORT);
 					}
