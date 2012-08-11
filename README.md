@@ -13,11 +13,11 @@ Instructions for setting up Eclipse:
 ====================================
 
 1) Follow the following Youtube videos for setting up Eclipse and the Android Emulator:
+
 	A) http://www.youtube.com/watch?v=SUOWNXGRc6g
 		i) Link to the site Travis speaks of at the end of the video: http://www.mybringback.com/tutorial-series/441/setting-up-jre-on-you-computer-so-you-can-begin-java-programming/
 	B) http://www.youtube.com/watch?v=857zrsYZKGo&feature=fvwrel
 	C) http://www.youtube.com/watch?v=Da1jlmwuW_w&feature=fvwrel
-
 	(Please make sure to download the latest version of of everything except for the Android platforms/packages)
 
 2) Download and open the project using EGit:
