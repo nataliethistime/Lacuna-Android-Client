@@ -12,7 +12,7 @@ Authors & Contributors
 Instructions for setting up Eclipse:
 ====================================
 
-1) Follow the following Youtube videos for setting up Eclipse and the Android Emulator: 
+1) Follow the following Youtube videos for setting up Eclipse and the Android Emulator:
 	A) http://www.youtube.com/watch?v=SUOWNXGRc6g
 		i) Link to the site Travis speaks of at the end of the video: http://www.mybringback.com/tutorial-series/441/setting-up-jre-on-you-computer-so-you-can-begin-java-programming/
 	B) http://www.youtube.com/watch?v=857zrsYZKGo&feature=fvwrel
