@@ -4,7 +4,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,36 +17,35 @@ public class Login extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		
-		//final static Library library;
 
 		Button loginButton = (Button) findViewById(R.id.loginButton);
 
 		loginButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				// Get entered empire name
+				// Get entered empire name and password
 				EditText empireNameField = (EditText) findViewById(R.id.empireNameField);
 				String empireName = empireNameField.getText().toString();
-
 				EditText passWordField = (EditText) findViewById(R.id.passWordField);
 				String empirePassword = passWordField.getText().toString();
 				
-				// Get selected item from Spinner
-				Spinner MySpinner = (Spinner) findViewById(R.id.selectServer);
-				int indexValue = MySpinner.getSelectedItemPosition();
+				
 				
 				if (empireName.length() <= 0) {
-					toast("Please enter your empire name",Toast.LENGTH_SHORT);
+					Toast.makeText(getApplicationContext(),"Please enter your empire name",Toast.LENGTH_SHORT).show();
 				}
 				else if (empirePassword.length() <= 0) {
-					toast("Please enter your empire password",Toast.LENGTH_SHORT);
+					Toast.makeText(getApplicationContext(),"Please enter your empire password",Toast.LENGTH_SHORT).show();
 				}
 				else {
-					// Set selectedServer and apiKey based on selected item in Spinner. Server defaults to US1
+					// Get selected item from Spinner
+					Spinner selectServerSpinner = (Spinner) findViewById(R.id.selectServer);
+					int indexValue = selectServerSpinner.getSelectedItemPosition();
+					
+					// Set selectedServer and apiKey based on selected item in Spinner. Server defaults to US1.
 					String selectedServer = null;
 					String apiKey = null;
 					if (indexValue == 0) {
-						toast("Please select a server",Toast.LENGTH_SHORT);
+						Toast.makeText(getApplicationContext(),"Please select a server",Toast.LENGTH_SHORT).show();
 					}
 					else if (indexValue == 1) {
 						selectedServer = "us1";
@@ -62,47 +60,47 @@ public class Login extends Activity {
 						apiKey = "01420b89-22d4-437f-b355-b99df1f4c8ea";
 					}
 					
-					// Create params and create GET URL
+					// Create params and create GET URL.
 					String[] paramsBuilder = {empireName,empirePassword,apiKey};
 					String params = Library.parseParams(paramsBuilder);
 					String serverUrl = Library.assembleGetUrl(selectedServer,"empire","login",params);
 					
-					// Send to server and toast result
+					// Send to server.
 					String serverResponse = Library.sendServerRequest(serverUrl);
-					toast(serverResponse,Toast.LENGTH_LONG);
 					
-					
-					
-					// "What's next?" I hear you ask, parsing JSON and handling errors...
-					String sessionId= null;
+					// Parse received JSON data
+					String sessionId = null;
 					try {
 						JSONObject jObject = new JSONObject(serverResponse);
 						JSONObject result = jObject.getJSONObject("result");
 						
-						sessionId  = result.getString("session_id");
+						sessionId = result.getString("session_id");
 					}
 					catch(JSONException e) {
-						toast("Error interpereting server response: " + e.toString(),Toast.LENGTH_LONG);
+						if (sessionId == null) {
+							try {
+								JSONObject jObject = new JSONObject(serverResponse);
+								JSONObject error = jObject.getJSONObject("error");
+							
+								int errorCode = error.getInt("code");
+								String errorMessage = error.getString("message");
+							
+								Toast.makeText(getApplicationContext(),"Error " + errorCode + ": " + errorMessage,Toast.LENGTH_SHORT).show();
+							}
+							catch (JSONException ex) {
+								Toast.makeText(getApplicationContext(),"Error interpreting server response: " + ex.toString(),Toast.LENGTH_SHORT).show();
+							}
+						}
 					}
 					
+					// Need to do this outside the try statement
 					if (sessionId != null) {
-						toast("Returned session id is: " + sessionId,Toast.LENGTH_LONG);
-					}
-					else {
-						toast("Something screwed up, returned session id is null",Toast.LENGTH_LONG);
+						// Call the planet view activity, (Which hasn't been created), 
+						// passing in the sessionId as a 'parameter'
+						Toast.makeText(getApplicationContext(),"Will move on to the planet view now...",Toast.LENGTH_SHORT).show();
 					}
 				}
 			}
 		});
-	}
-
-	
-	// Toast method which I can't implement in the library
-	private void toast(String message, int duration) {
-		Context context = getApplicationContext();
-		CharSequence text = message;
-
-		Toast toast = Toast.makeText(context, text, duration);
-		toast.show();
 	}
 }
