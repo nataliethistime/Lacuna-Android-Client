@@ -6,7 +6,7 @@ Android client for The Lacuna Expanse. Source code for the project is contained 
 Authors & Contributors
 ======================
 
-	-The Vasari!
+	-The Vasari! (thevasari@gmail.com)
 	-Anyone else, feel free to add you name here ;)
 
 Instructions for setting up Eclipse:
