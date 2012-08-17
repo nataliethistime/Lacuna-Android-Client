@@ -5,10 +5,8 @@
     <string name="menu_settings">Settings</string>
     <string name="title_activity_login">Login</string>
     <string name="login">Login</string>
-    <string name="title_activity_starting_splash_screen">StartingSplashScreen</string>
-    <string name="greeting">You are now entering&#8230;</string>
-    <string name="version">v1.0</string>
-    <string name="tleLogo">TLE Logo</string>
-    <string name="ship">Colony Ship</string>
+    <string name="title_activity_planet_view">PlanetView</string>
+    <string name="resInfoTitle">Resource Info</string>
+    <string name="blank"></string>
 
 </resources>

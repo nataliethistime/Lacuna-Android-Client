@@ -10,6 +10,12 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.widget.Toast;
 
 public class Library {
 	public static String parseParams(String[] target) {
@@ -74,4 +80,49 @@ public class Library {
 
 		return receivedData;
 	}
+	
+	public static ProgressDialog loadingDialog(Context context,String message) {
+		ProgressDialog loadingDialog = new ProgressDialog(context);
+		loadingDialog.setMessage(message);
+		loadingDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		
+		return loadingDialog;
+	}
+	
+	public static void handleError(Context context,String jsonData,ProgressDialog loadingDialog) {
+		try {
+			JSONObject jObject = new JSONObject(jsonData);
+			JSONObject error = jObject.getJSONObject("error");
+		
+			int errorCode = error.getInt("code");
+			String errorMessage = error.getString("message");
+		
+			loadingDialog.dismiss();
+			Toast.makeText(context,"Error " + errorCode + ": " + errorMessage,Toast.LENGTH_LONG).show();
+		}
+		catch (JSONException ex) {
+			loadingDialog.dismiss();
+			Toast.makeText(context,"Error interpreting server response: " + ex.toString(),Toast.LENGTH_LONG).show();
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

@@ -4,6 +4,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +24,9 @@ public class Login extends Activity {
 
 		loginButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				ProgressDialog loadingDialog = Library.loadingDialog(Login.this,"Loading...");
+				loadingDialog.show();
+				
 				// Get entered empire name and password
 				EditText empireNameField = (EditText) findViewById(R.id.empireNameField);
 				String empireName = empireNameField.getText().toString();
@@ -31,9 +36,11 @@ public class Login extends Activity {
 				
 				
 				if (empireName.length() <= 0) {
+					loadingDialog.dismiss();
 					Toast.makeText(getApplicationContext(),"Please enter your empire name",Toast.LENGTH_SHORT).show();
 				}
 				else if (empirePassword.length() <= 0) {
+					loadingDialog.dismiss();
 					Toast.makeText(getApplicationContext(),"Please enter your empire password",Toast.LENGTH_SHORT).show();
 				}
 				else {
@@ -45,6 +52,7 @@ public class Login extends Activity {
 					String selectedServer = null;
 					String apiKey = null;
 					if (indexValue == 0) {
+						loadingDialog.dismiss();
 						Toast.makeText(getApplicationContext(),"Please select a server",Toast.LENGTH_SHORT).show();
 					}
 					else if (indexValue == 1) {
@@ -77,27 +85,21 @@ public class Login extends Activity {
 						sessionId = result.getString("session_id");
 					}
 					catch(JSONException e) {
-						if (sessionId == null) {
-							try {
-								JSONObject jObject = new JSONObject(serverResponse);
-								JSONObject error = jObject.getJSONObject("error");
-							
-								int errorCode = error.getInt("code");
-								String errorMessage = error.getString("message");
-							
-								Toast.makeText(getApplicationContext(),"Error " + errorCode + ": " + errorMessage,Toast.LENGTH_SHORT).show();
-							}
-							catch (JSONException ex) {
-								Toast.makeText(getApplicationContext(),"Error interpreting server response: " + ex.toString(),Toast.LENGTH_SHORT).show();
-							}
-						}
+						Library.handleError(Login.this,serverResponse,loadingDialog);
 					}
+					loadingDialog.dismiss();
 					
 					// Need to do this outside the try statement
 					if (sessionId != null) {
-						// Call the planet view activity, (Which hasn't been created), 
-						// passing in the sessionId as a 'parameter'
-						Toast.makeText(getApplicationContext(),"Will move on to the planet view now...",Toast.LENGTH_SHORT).show();
+						// Load session id and server response into an intent for passing into the next Activity
+						Intent intent = new Intent(Login.this,PlanetView.class);
+						intent.putExtra("selectedServer", selectedServer);
+						intent.putExtra("sessionId", sessionId);
+						intent.putExtra("serverResponse", serverResponse); // So we can get the home_planet_id
+						
+						// Start PlanetView Activity
+						Login.this.startActivity(intent);
+						finish();
 					}
 				}
 			}
