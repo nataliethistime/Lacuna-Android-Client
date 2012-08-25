@@ -33,27 +33,25 @@ public class Login extends Activity {
 				EditText passWordField = (EditText) findViewById(R.id.passWordField);
 				String empirePassword = passWordField.getText().toString();
 				
-				
+				// Get selected item from Spinner
+				Spinner selectServerSpinner = (Spinner) findViewById(R.id.selectServer);
+				int indexValue = selectServerSpinner.getSelectedItemPosition();
 				
 				if (empireName.length() <= 0) {
 					loadingDialog.dismiss();
-					Toast.makeText(getApplicationContext(),"Please enter your empire name",Toast.LENGTH_SHORT).show();
+					Toast.makeText(Login.this,"Please enter your empire name",Toast.LENGTH_SHORT).show();
 				}
 				else if (empirePassword.length() <= 0) {
 					loadingDialog.dismiss();
-					Toast.makeText(getApplicationContext(),"Please enter your empire password",Toast.LENGTH_SHORT).show();
+					Toast.makeText(Login.this,"Please enter your empire password",Toast.LENGTH_SHORT).show();
 				}
 				else {
-					// Get selected item from Spinner
-					Spinner selectServerSpinner = (Spinner) findViewById(R.id.selectServer);
-					int indexValue = selectServerSpinner.getSelectedItemPosition();
-					
 					// Set selectedServer and apiKey based on selected item in Spinner. Server defaults to US1.
 					String selectedServer = null;
 					String apiKey = null;
 					if (indexValue == 0) {
 						loadingDialog.dismiss();
-						Toast.makeText(getApplicationContext(),"Please select a server",Toast.LENGTH_SHORT).show();
+						Toast.makeText(Login.this,"Please select a server",Toast.LENGTH_SHORT).show();
 					}
 					else if (indexValue == 1) {
 						selectedServer = "us1";
@@ -68,39 +66,45 @@ public class Login extends Activity {
 						apiKey = "01420b89-22d4-437f-b355-b99df1f4c8ea";
 					}
 					
-					// Create params and create GET URL.
-					String[] paramsBuilder = {empireName,empirePassword,apiKey};
-					String params = Library.parseParams(paramsBuilder);
-					String serverUrl = Library.assembleGetUrl(selectedServer,"empire","login",params);
+					// Doing this stops it from crashing randomly when no server is selected
+					if (selectedServer != null && apiKey != null) {
+						// Create params and create GET URL.
+						String[] paramsBuilder = {empireName,empirePassword,apiKey};
+						String params = Library.parseParams(paramsBuilder);
+						String serverUrl = Library.assembleGetUrl(selectedServer,"empire","login",params);
 					
-					// Send to server.
-					String serverResponse = Library.sendServerRequest(serverUrl);
+						// Send to server.
+						String serverResponse = Library.sendServerRequest(serverUrl);
 					
-					// Parse received JSON data
-					String sessionId = null;
-					try {
-						JSONObject jObject = new JSONObject(serverResponse);
-						JSONObject result = jObject.getJSONObject("result");
+						// Parse received JSON data
+						String sessionId = null;
+						try {
+							JSONObject jObject = new JSONObject(serverResponse);
+							JSONObject result = jObject.getJSONObject("result");
 						
-						sessionId = result.getString("session_id");
-					}
-					catch(JSONException e) {
-						Library.handleError(Login.this,serverResponse,loadingDialog);
-					}
-					loadingDialog.dismiss();
+							sessionId = result.getString("session_id");
+						}
+						catch(JSONException e) {
+							Library.handleError(Login.this,serverResponse,loadingDialog);
+						}
+						loadingDialog.dismiss();
 					
-					// Need to do this outside the try statement
-					if (sessionId != null) {
-						// Load session id and server response into an intent for passing into the next Activity
-						Intent intent = new Intent(Login.this,PlanetView.class);
-						intent.putExtra("selectedServer", selectedServer);
-						intent.putExtra("sessionId", sessionId);
-						intent.putExtra("serverResponse", serverResponse); // So we can get the home_planet_id
+						// Need to do this outside the try statement
+						if (sessionId != null) {
+							// Load session id and server response into an intent for passing into the next Activity
+							Intent intent = new Intent(Login.this,PlanetView.class);
+							intent.putExtra("selectedServer", selectedServer);
+							intent.putExtra("sessionId", sessionId);
+							intent.putExtra("serverResponse", serverResponse); // So we can get the home_planet_id
 						
-						// Start PlanetView Activity
-						Login.this.startActivity(intent);
-						finish();
+							// Start PlanetView Activity
+							Login.this.startActivity(intent);
+							finish();
+						}
 					}
+					
+					Toast.makeText(Login.this, "Chrome, If you see this, please let me know.",  Toast.LENGTH_LONG).show();
+					
 				}
 			}
 		});

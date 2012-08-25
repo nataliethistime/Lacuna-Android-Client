@@ -4,4 +4,7 @@
         <item >US1</item>
         <item >PT</item>
     </string-array>    
+    
+    <string-array name="planetOptions">
+    </string-array>
 </resources>

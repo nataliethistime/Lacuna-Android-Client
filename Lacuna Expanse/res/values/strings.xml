@@ -1,12 +1,15 @@
 <resources>
 
     <string name="app_name">Lacuna Expanse</string>
-    <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_login">Login</string>
     <string name="login">Login</string>
     <string name="title_activity_planet_view">PlanetView</string>
     <string name="resInfoTitle">Resource Info</string>
     <string name="blank"></string>
+    <string name="logout">Logout</string>
+    <string name="selectDifPlanet">Change Planet</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_select_planet">SelectPlanet</string>
 
 </resources>

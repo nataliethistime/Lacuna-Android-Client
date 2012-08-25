@@ -1,19 +1,31 @@
 package com.lacunaexpanse.LacunaAndroidClient;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class PlanetView extends Activity {
 
-    @Override
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_planet_view);
+        
+        final long spinnerReset = System.currentTimeMillis();
         
         ProgressDialog loadingDialog = Library.loadingDialog(PlanetView.this, "Loading...");
         loadingDialog.show();
@@ -40,18 +52,129 @@ public class PlanetView extends Activity {
 		}
 		catch (JSONException e) {
 			loadingDialog.dismiss();
+			Library.handleError(PlanetView.this, serverResponseFromPreviousActivity, loadingDialog);
 		}
 		
-		String[] paramsBuilder = {sessionId,homePlanetId};
+		String serverResponse = refreshResources(sessionId,homePlanetId,selectedServer,loadingDialog);
+		
+		
+		// Parse the JSON for getting the list of planets
+		Object[] planetIds = null;
+		try {
+			JSONObject jObject = new JSONObject(serverResponseFromPreviousActivity);
+			JSONObject result = jObject.getJSONObject("result");
+			JSONObject status = result.getJSONObject("status");
+			JSONObject empire = status.getJSONObject("empire");
+			JSONObject planets = empire.getJSONObject("planets");
+			
+			ArrayList<String> arrayOne = new ArrayList<String>();
+			ArrayList<String> arrayTwo = new ArrayList<String>();
+	        Iterator<?> iter = planets.keys();
+	        
+	        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+	        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	        Spinner selectPlanetSpinner = (Spinner) findViewById(R.id.selectPlanet);
+	        
+	        while(iter.hasNext()){
+	            String key = (String)iter.next();
+	            String value = planets.getString(key);
+	            
+	            arrayTwo.add(key);
+	            arrayOne.add(value);
+	        }
+	        
+	        Object[] planetNames = arrayOne.toArray();
+			/*Object[]*/ planetIds = arrayTwo.toArray();
+	        
+	        for (int i = 0; i < planetNames.length; i++) {
+	        	adapter.add(planetNames[i].toString());
+	        }
+	        
+	        selectPlanetSpinner.setAdapter(adapter);
+	        
+		}
+		catch (JSONException e) {
+			loadingDialog.dismiss();
+			Library.handleError(PlanetView.this, serverResponse, loadingDialog);
+		}
+		
+		// At long last, the loading has finished! :D
+		loadingDialog.dismiss();
+		
+		final Object[] planetIdsOne = planetIds;
+		final String sessionIdOne = sessionId;
+		final String selectedServerOne = selectedServer;
+		final ProgressDialog loadingDialogOne = loadingDialog;
+		
+		Spinner spinner = (Spinner) findViewById(R.id.selectPlanet);
+		spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			public void onItemSelected(AdapterView<?> parent,View view,int pos,long id) {
+				if (System.currentTimeMillis() - spinnerReset < 500) {
+					String selectedBodyId = planetIdsOne[pos].toString();
+				
+					refreshResources(sessionIdOne,selectedBodyId,selectedServerOne,loadingDialogOne);
+				}
+				else {
+					//Nothing!
+				}
+			}
+			
+			public void onNothingSelected(AdapterView<?> parent) {
+				// Nothing!
+			}
+		});
+		
+		// Handle clicking of the "Logout" button.
+		final String sessionIdTwo = sessionId;
+		final String selectedServerTwo = selectedServer;
+		
+		Button logoutButton = (Button) findViewById(R.id.logoutButton);
+		logoutButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				ProgressDialog loadingDialog = Library.loadingDialog(PlanetView.this, "Loading...");
+				loadingDialog.show();
+				
+				String[] paramsBuilder = {sessionIdTwo};
+				String params = Library.parseParams(paramsBuilder);
+				String serverUrl = Library.assembleGetUrl(selectedServerTwo, "empire", "logout", params);
+				
+				String serverResponseOne = Library.sendServerRequest(serverUrl);
+				
+				//Parse JSON
+				int result = 0;
+				try {
+					JSONObject jObject = new JSONObject(serverResponseOne);
+					result = jObject.getInt("result");
+				}
+				catch (JSONException e) {
+					loadingDialog.dismiss();
+					Library.handleError(PlanetView.this, serverResponseOne, loadingDialog);
+				}
+				
+				if (result == 1) {
+					loadingDialog.dismiss();
+					Intent intent = new Intent(PlanetView.this,Login.class);
+					PlanetView.this.startActivity(intent);
+					finish();
+				}
+				else {
+					loadingDialog.dismiss();
+					Toast.makeText(PlanetView.this, "Something stupido has happened while the logout request was being made...", Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+    }
+    
+    public String refreshResources(String sessionId,String homePlanetId,String selectedServer,ProgressDialog loadingdialog) {
+    	ProgressDialog loadingDialog = Library.loadingDialog(PlanetView.this, "Loading...");
+    	loadingDialog.show();
+    	
+    	String[] paramsBuilder = {sessionId,homePlanetId};
 		String params = Library.parseParams(paramsBuilder);
-		String serverUrl = Library.assembleGetUrl(selectedServer, "body", "get_buildings", params);
+		String serverUrl = Library.assembleGetUrl(selectedServer, "body", "get_status", params);
 		
 		String serverResponse = Library.sendServerRequest(serverUrl);
 		
-		// Time to parse the big load of bullcrap the server has given us...
-		
-		
-		// For the sake of it, we're going to get the production levels and resource storage levels
 		TextView planetNameOutput = (TextView) findViewById(R.id.planetName);
 		TextView foodInformationOutput = (TextView) findViewById(R.id.foodProductionInfo);
 		TextView oreInformationOutput = (TextView) findViewById(R.id.oreProductionInfo);
@@ -80,12 +203,12 @@ public class PlanetView extends Activity {
 		String wasteStorage     = null;
 		String wasteStored      = null;
 		
-		String planetName = null;
+		String planetName       = null;
 		try {
 			JSONObject jObject = new JSONObject(serverResponse);
 			JSONObject result = jObject.getJSONObject("result");
-			JSONObject status = result.getJSONObject("status");
-			JSONObject body = status.getJSONObject("body");
+			//JSONObject status = result.getJSONObject("status");
+			JSONObject body = result.getJSONObject("body");
 			
 			// Get food information
 			foodProduction = body.getString("food_hour");
@@ -128,24 +251,7 @@ public class PlanetView extends Activity {
 		
 		loadingDialog.dismiss();
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		//For when the planets spinner needs updating
+		return serverResponse;
     }
 }

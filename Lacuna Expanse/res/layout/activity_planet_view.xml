@@ -55,4 +55,17 @@
         android:textSize="15dp"
         android:text="@string/blank" />
     
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/selectPlanet" />
+    
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/logoutButton"
+        android:text="@string/logout" />
+    
 </LinearLayout>
