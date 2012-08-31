@@ -21,21 +21,21 @@ public class Library {
 	public static String parseParams(String[] target) {
 		StringBuilder sbOne = new StringBuilder();
 		sbOne.append("[");
-		
+
 		for (int i = 0; i < target.length; i++) {
 			sbOne.append("\"" + target[i] + "\",");
 		}
-		
+
 		String resultOne = sbOne.toString();
 		resultOne = resultOne.substring(0, resultOne.length()-1);
-		
+
 		StringBuilder sbTwo = new StringBuilder(resultOne);
 		sbTwo.append("]");
 		String result = sbTwo.toString();
-		
+
 		return result;
 	}
-	
+
 	public static String assembleGetUrl(String selectedServer,String module,String method,String params) {
 		String encodedParams = null;
 		try {
@@ -45,14 +45,14 @@ public class Library {
 			e.printStackTrace();
 		}
 		StringBuilder sb = new StringBuilder();
-		
+
 		sb.append("http://" + selectedServer + ".lacunaexpanse.com/" + module + "?jsonrpc=2.0&id=1&method=" + method + "&params=" + encodedParams);
-		
+
 		String finalURL = sb.toString();
-		
+
 		return finalURL;
 	}
-	
+
 	public static String sendServerRequest(String serverUrl) {
 		URI uri = null;
 		String receivedData = null;
@@ -80,23 +80,23 @@ public class Library {
 
 		return receivedData;
 	}
-	
+
 	public static ProgressDialog loadingDialog(Context context,String message) {
 		ProgressDialog loadingDialog = new ProgressDialog(context);
 		loadingDialog.setMessage(message);
 		loadingDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		
+
 		return loadingDialog;
 	}
-	
+
 	public static void handleError(Context context,String jsonData,ProgressDialog loadingDialog) {
 		try {
 			JSONObject jObject = new JSONObject(jsonData);
 			JSONObject error = jObject.getJSONObject("error");
-		
+
 			int errorCode = error.getInt("code");
 			String errorMessage = error.getString("message");
-		
+
 			loadingDialog.dismiss();
 			Toast.makeText(context,"Error " + errorCode + ": " + errorMessage,Toast.LENGTH_LONG).show();
 		}
@@ -106,23 +106,50 @@ public class Library {
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	public static String formatBigNumbers(long bigNumber) {
+		//StringBuilder sb = new StringBuilder();
+		
+		/*
+		if(bigNumber >= 100000000000000000 || bigNumber <= -100000000000000000) {
+            //101Q
+            return bigNumber/1000000000000000 + "Q";
+        }
+        else if(bigNumber >= 1000000000000000 || bigNumber <= -1000000000000000) {
+            //75.3Q
+            return bigNumber/100000000000000 / 10 + "Q";
+        }
+        else if(bigNumber >= 100000000000000 || bigNumber <= -100000000000000) {
+            //101T
+            return bigNumber/1000000000000) + "T";
+        }
+        else if(bigNumber >= 1000000000000 || bigNumber <= -1000000000000) {
+            //75.3T
+            return bigNumber/100000000000 / 10 + "T";
+        }
+        else if(bigNumber >= 100000000000 || bigNumber <= -100000000000) {
+            //101B
+            return bigNumber/1000000000 + "B";
+        }
+        */
+        if(bigNumber >= 1000000000 || bigNumber <= -1000000000) {
+            //75.3B
+            return bigNumber/100000000 / 10 + "B";
+        }
+        else if(bigNumber >= 100000000 || bigNumber <= -100000000) {
+            //101M
+            return bigNumber/1000000 + "M";
+        }
+        else if(bigNumber >= 1000000 || bigNumber <= -1000000) {
+            //75.3M
+            return bigNumber/100000 / 10 + "M";
+        }
+        else if(bigNumber >= 10000 || bigNumber <= -10000) {
+            //123k
+            return bigNumber/1000 + "k";
+        }
+        else {
+            //8765
+            return "" + bigNumber;
+        }
+	}
 }

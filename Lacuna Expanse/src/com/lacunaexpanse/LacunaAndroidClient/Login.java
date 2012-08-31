@@ -26,17 +26,17 @@ public class Login extends Activity {
 			public void onClick(View v) {
 				ProgressDialog loadingDialog = Library.loadingDialog(Login.this,"Loading...");
 				loadingDialog.show();
-				
+
 				// Get entered empire name and password
 				EditText empireNameField = (EditText) findViewById(R.id.empireNameField);
 				String empireName = empireNameField.getText().toString();
 				EditText passWordField = (EditText) findViewById(R.id.passWordField);
 				String empirePassword = passWordField.getText().toString();
-				
+
 				// Get selected item from Spinner
 				Spinner selectServerSpinner = (Spinner) findViewById(R.id.selectServer);
 				int indexValue = selectServerSpinner.getSelectedItemPosition();
-				
+
 				if (empireName.length() <= 0) {
 					loadingDialog.dismiss();
 					Toast.makeText(Login.this,"Please enter your empire name",Toast.LENGTH_SHORT).show();
@@ -44,6 +44,7 @@ public class Login extends Activity {
 				else if (empirePassword.length() <= 0) {
 					loadingDialog.dismiss();
 					Toast.makeText(Login.this,"Please enter your empire password",Toast.LENGTH_SHORT).show();
+					empireNameField.setText("");
 				}
 				else {
 					// Set selectedServer and apiKey based on selected item in Spinner. Server defaults to US1.
@@ -65,30 +66,30 @@ public class Login extends Activity {
 						selectedServer = "us1";
 						apiKey = "01420b89-22d4-437f-b355-b99df1f4c8ea";
 					}
-					
+
 					// Doing this stops it from crashing randomly when no server is selected
 					if (selectedServer != null && apiKey != null) {
 						// Create params and create GET URL.
 						String[] paramsBuilder = {empireName,empirePassword,apiKey};
 						String params = Library.parseParams(paramsBuilder);
 						String serverUrl = Library.assembleGetUrl(selectedServer,"empire","login",params);
-					
+
 						// Send to server.
 						String serverResponse = Library.sendServerRequest(serverUrl);
-					
+
 						// Parse received JSON data
 						String sessionId = null;
 						try {
 							JSONObject jObject = new JSONObject(serverResponse);
 							JSONObject result = jObject.getJSONObject("result");
-						
+
 							sessionId = result.getString("session_id");
 						}
 						catch(JSONException e) {
 							Library.handleError(Login.this,serverResponse,loadingDialog);
 						}
 						loadingDialog.dismiss();
-					
+
 						// Need to do this outside the try statement
 						if (sessionId != null) {
 							// Load session id and server response into an intent for passing into the next Activity
@@ -96,15 +97,12 @@ public class Login extends Activity {
 							intent.putExtra("selectedServer", selectedServer);
 							intent.putExtra("sessionId", sessionId);
 							intent.putExtra("serverResponse", serverResponse); // So we can get the home_planet_id
-						
+
 							// Start PlanetView Activity
 							Login.this.startActivity(intent);
 							finish();
 						}
 					}
-					
-					Toast.makeText(Login.this, "Chrome, If you see this, please let me know.",  Toast.LENGTH_LONG).show();
-					
 				}
 			}
 		});
