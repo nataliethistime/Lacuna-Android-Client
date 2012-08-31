@@ -23,7 +23,7 @@ public class PlanetResourceView extends Activity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_planet_view);
+        setContentView(R.layout.activity_planet_resource_view);
         
         final long spinnerReset = System.currentTimeMillis();
         
@@ -162,6 +162,19 @@ public class PlanetResourceView extends Activity {
 				}
 			}
 		});
+		
+		final String SELECTED_SERVER = selectedServer;
+		final String SESSION_ID = sessionId;
+		
+		Button viewBuildingsButton = (Button) findViewById(R.id.viewPlanetButton);
+		viewBuildingsButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(PlanetResourceView.this,PlanetBuildingsView.class);
+				intent.putExtra("selectedServer", SELECTED_SERVER);
+				intent.putExtra("sessionId", SESSION_ID);
+				PlanetResourceView.this.startActivity(intent);
+			}
+		});
     }
     
     public String refreshResources(String sessionId,String homePlanetId,String selectedServer,ProgressDialog loadingdialog) {
@@ -267,6 +280,9 @@ public class PlanetResourceView extends Activity {
 		waterInformationOutput.setText("Water: " + miniWaterStored + "/" + miniWaterStorage + " @ " + miniWaterProduction + "/hr");
 		energyInformationOutput.setText("Energy: " + miniEnergyStored + "/" + miniEnergyStorage + " @ " + miniEnergyProduction + "/hr");
 		wasteInformationOutput.setText("Waste: " + miniWasteStored + "/" + miniWasteStorage + " @ " + miniWasteProduction + "/hr");
+		
+		Button viewBuildingsButton = (Button) findViewById(R.id.viewPlanetButton);
+		viewBuildingsButton.setText("View Buildings on " + planetName);
 
 		loadingDialog.dismiss();
 

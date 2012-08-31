@@ -11,5 +11,6 @@
     <string name="selectDifPlanet">Change Planet</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_select_planet">SelectPlanet</string>
+    <string name="title_activity_planet_buildings_view">PlanetBuildingsView</string>
 
 </resources>
