@@ -18,7 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class PlanetView extends Activity {
+public class PlanetResourceView extends Activity {
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,7 +27,7 @@ public class PlanetView extends Activity {
         
         final long spinnerReset = System.currentTimeMillis();
         
-        ProgressDialog loadingDialog = Library.loadingDialog(PlanetView.this, "Loading...");
+        ProgressDialog loadingDialog = Library.loadingDialog(PlanetResourceView.this, "Loading...");
         loadingDialog.show();
         
         String sessionId = null;
@@ -52,7 +52,7 @@ public class PlanetView extends Activity {
 		}
 		catch (JSONException e) {
 			loadingDialog.dismiss();
-			Library.handleError(PlanetView.this, serverResponseFromPreviousActivity, loadingDialog);
+			Library.handleError(PlanetResourceView.this, serverResponseFromPreviousActivity, loadingDialog);
 		}
 
 		String serverResponse = refreshResources(sessionId,homePlanetId,selectedServer,loadingDialog);
@@ -95,7 +95,7 @@ public class PlanetView extends Activity {
 		}
 		catch (JSONException e) {
 			loadingDialog.dismiss();
-			Library.handleError(PlanetView.this, serverResponse, loadingDialog);
+			Library.handleError(PlanetResourceView.this, serverResponse, loadingDialog);
 		}
 
 		// At long last, the loading has finished! :D
@@ -130,7 +130,7 @@ public class PlanetView extends Activity {
 		Button logoutButton = (Button) findViewById(R.id.logoutButton);
 		logoutButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				ProgressDialog loadingDialog = Library.loadingDialog(PlanetView.this, "Loading...");
+				ProgressDialog loadingDialog = Library.loadingDialog(PlanetResourceView.this, "Loading...");
 				loadingDialog.show();
 
 				String[] paramsBuilder = {sessionIdTwo};
@@ -147,25 +147,25 @@ public class PlanetView extends Activity {
 				}
 				catch (JSONException e) {
 					loadingDialog.dismiss();
-					Library.handleError(PlanetView.this, serverResponseOne, loadingDialog);
+					Library.handleError(PlanetResourceView.this, serverResponseOne, loadingDialog);
 				}
 
 				if (result == 1) {
 					loadingDialog.dismiss();
-					Intent intent = new Intent(PlanetView.this,Login.class);
-					PlanetView.this.startActivity(intent);
+					Intent intent = new Intent(PlanetResourceView.this,Login.class);
+					PlanetResourceView.this.startActivity(intent);
 					finish();
 				}
 				else {
 					loadingDialog.dismiss();
-					Toast.makeText(PlanetView.this, "Something stupido has happened while the logout request was being made...", Toast.LENGTH_LONG).show();
+					Toast.makeText(PlanetResourceView.this, "Something stupido has happened while the logout request was being made...", Toast.LENGTH_LONG).show();
 				}
 			}
 		});
     }
     
     public String refreshResources(String sessionId,String homePlanetId,String selectedServer,ProgressDialog loadingdialog) {
-    	ProgressDialog loadingDialog = Library.loadingDialog(PlanetView.this, "Loading...");
+    	ProgressDialog loadingDialog = Library.loadingDialog(PlanetResourceView.this, "Loading...");
     	loadingDialog.show();
     	
     	String[] paramsBuilder = {sessionId,homePlanetId};
@@ -237,7 +237,7 @@ public class PlanetView extends Activity {
 		}
 		catch (JSONException e) {
 			loadingDialog.dismiss();
-			Library.handleError(PlanetView.this, serverResponse, loadingDialog);
+			Library.handleError(PlanetResourceView.this, serverResponse, loadingDialog);
 		}
 		
 		// Organize the big numbers the server has returned

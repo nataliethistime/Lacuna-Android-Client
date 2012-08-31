@@ -93,7 +93,7 @@ public class Login extends Activity {
 						// Need to do this outside the try statement
 						if (sessionId != null) {
 							// Load session id and server response into an intent for passing into the next Activity
-							Intent intent = new Intent(Login.this,PlanetView.class);
+							Intent intent = new Intent(Login.this,PlanetResourceView.class);
 							intent.putExtra("selectedServer", selectedServer);
 							intent.putExtra("sessionId", sessionId);
 							intent.putExtra("serverResponse", serverResponse); // So we can get the home_planet_id
