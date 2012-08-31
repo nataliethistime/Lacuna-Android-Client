@@ -1,8 +1,7 @@
 package com.lacunaexpanse.LacunaAndroidClient;
 
-import android.os.Bundle;
 import android.app.Activity;
-import android.view.Menu;
+import android.os.Bundle;
 
 public class PlanetBuildingsView extends Activity {
 
@@ -10,11 +9,25 @@ public class PlanetBuildingsView extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_planet_buildings_view);
+        
+        final Bundle EXTRAS = getIntent().getExtras();
+        
+        String sessionId = null;
+        String selectedServer = null;
+        String selectedBodyId = null;
+        if (EXTRAS != null) {
+        	sessionId = EXTRAS.getString("sessionId");
+        	selectedServer = EXTRAS.getString("selectedServer");
+        	selectedBodyId = EXTRAS.getString("selectedBodyId");
+        }
+        
+        //Declare our finals
+        final String SESSION_ID = sessionId;
+        final String SELECTED_SERVER = selectedServer;
+        final String SELECTED_BODY_ID = selectedBodyId;
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_planet_buildings_view, menu);
-        return true;
-    }
+    /*
+     * The plan from here on out, for the moment, 
+     * is to do a lot of code cleanup and make things more streamlined before moving on to other things.
+     */
 }

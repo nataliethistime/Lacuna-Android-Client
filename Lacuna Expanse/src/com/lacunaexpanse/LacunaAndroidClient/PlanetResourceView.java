@@ -27,23 +27,32 @@ public class PlanetResourceView extends Activity {
         
         final long spinnerReset = System.currentTimeMillis();
         
-        ProgressDialog loadingDialog = Library.loadingDialog(PlanetResourceView.this, "Loading...");
-        loadingDialog.show();
+        ProgressDialog loadingDialog = new ProgressDialog(PlanetResourceView.this);
+        loadingDialog.setMessage("Loading...");
+        
+        final ProgressDialog LOADING_DIALOG = loadingDialog;
+        LOADING_DIALOG.show();
         
         String sessionId = null;
         String serverResponseFromPreviousActivity = null;
         String selectedServer = null;
-        Bundle extras = getIntent().getExtras(); 
-        if (extras != null) {
-        	sessionId = extras.getString("sessionId");
-        	serverResponseFromPreviousActivity = extras.getString("serverResponse");
-        	selectedServer = extras.getString("selectedServer");
+        
+        final Bundle EXTRAS = getIntent().getExtras(); 
+        
+        if (EXTRAS != null) {
+        	sessionId = EXTRAS.getString("sessionId");
+        	serverResponseFromPreviousActivity = EXTRAS.getString("serverResponse");
+        	selectedServer = EXTRAS.getString("selectedServer");
         }
+        
+        final String SESSION_ID = sessionId;
+        final String SERVER_RESPONSE_FROM_PREVIOUS_ACTIVITY = serverResponseFromPreviousActivity;
+        final String SELECTED_SERVER = selectedServer;
 
 		// Get home_planet_id
 		String homePlanetId = null;
 		try {
-			JSONObject jObject = new JSONObject(serverResponseFromPreviousActivity);
+			JSONObject jObject = new JSONObject(SERVER_RESPONSE_FROM_PREVIOUS_ACTIVITY);
 			JSONObject result = jObject.getJSONObject("result");
 			JSONObject status = result.getJSONObject("status");
 			JSONObject empire = status.getJSONObject("empire");
@@ -51,17 +60,18 @@ public class PlanetResourceView extends Activity {
 			homePlanetId = empire.getString("home_planet_id");
 		}
 		catch (JSONException e) {
-			loadingDialog.dismiss();
-			Library.handleError(PlanetResourceView.this, serverResponseFromPreviousActivity, loadingDialog);
+			LOADING_DIALOG.dismiss();
+			Library.handleError(PlanetResourceView.this, SERVER_RESPONSE_FROM_PREVIOUS_ACTIVITY, LOADING_DIALOG);
 		}
-
-		String serverResponse = refreshResources(sessionId,homePlanetId,selectedServer,loadingDialog);
+		final String HOME_PLANET_ID = homePlanetId;
+		
+		String serverResponse = refreshResources(SESSION_ID,HOME_PLANET_ID,SELECTED_SERVER);
 
 
 		// Parse the JSON for getting the list of planets
 		Object[] planetIds = null;
 		try {
-			JSONObject jObject = new JSONObject(serverResponseFromPreviousActivity);
+			JSONObject jObject = new JSONObject(SERVER_RESPONSE_FROM_PREVIOUS_ACTIVITY);
 			JSONObject result = jObject.getJSONObject("result");
 			JSONObject status = result.getJSONObject("status");
 			JSONObject empire = status.getJSONObject("empire");
@@ -94,17 +104,12 @@ public class PlanetResourceView extends Activity {
 
 		}
 		catch (JSONException e) {
-			loadingDialog.dismiss();
-			Library.handleError(PlanetResourceView.this, serverResponse, loadingDialog);
+			LOADING_DIALOG.dismiss();
+			Library.handleError(PlanetResourceView.this, serverResponse, LOADING_DIALOG);
 		}
+		LOADING_DIALOG.dismiss();
 
-		// At long last, the loading has finished! :D
-		loadingDialog.dismiss();
-
-		final Object[] planetIdsOne = planetIds;
-		final String sessionIdOne = sessionId;
-		final String selectedServerOne = selectedServer;
-		final ProgressDialog loadingDialogOne = loadingDialog;
+		final Object[] PLANET_IDS = planetIds;
 
 		Spinner spinner = (Spinner) findViewById(R.id.selectPlanet);
 		spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -113,9 +118,9 @@ public class PlanetResourceView extends Activity {
 					//Nothing!
 				}
 				else if (System.currentTimeMillis() - spinnerReset > 2500) {
-					String selectedBodyId = planetIdsOne[pos].toString();
+					String selectedBodyId = PLANET_IDS[pos].toString();
 
-					refreshResources(sessionIdOne,selectedBodyId,selectedServerOne,loadingDialogOne);
+					refreshResources(SESSION_ID,selectedBodyId,SELECTED_SERVER);
 				}
 			}
 			public void onNothingSelected(AdapterView<?> parent) {
@@ -124,62 +129,62 @@ public class PlanetResourceView extends Activity {
 		});
 
 		// Handle clicking of the "Logout" button.
-		final String sessionIdTwo = sessionId;
-		final String selectedServerTwo = selectedServer;
-
 		Button logoutButton = (Button) findViewById(R.id.logoutButton);
 		logoutButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				ProgressDialog loadingDialog = Library.loadingDialog(PlanetResourceView.this, "Loading...");
-				loadingDialog.show();
+				LOADING_DIALOG.show();
 
-				String[] paramsBuilder = {sessionIdTwo};
+				String[] paramsBuilder = {SESSION_ID};
 				String params = Library.parseParams(paramsBuilder);
-				String serverUrl = Library.assembleGetUrl(selectedServerTwo, "empire", "logout", params);
+				String serverUrl = Library.assembleGetUrl(SELECTED_SERVER, "empire", "logout", params);
 
-				String serverResponseOne = Library.sendServerRequest(serverUrl);
+				String serverResponse = Library.sendServerRequest(serverUrl);
 
 				//Parse JSON
 				int result = 0;
 				try {
-					JSONObject jObject = new JSONObject(serverResponseOne);
+					JSONObject jObject = new JSONObject(serverResponse);
 					result = jObject.getInt("result");
 				}
 				catch (JSONException e) {
-					loadingDialog.dismiss();
-					Library.handleError(PlanetResourceView.this, serverResponseOne, loadingDialog);
+					LOADING_DIALOG.dismiss();
+					Library.handleError(PlanetResourceView.this, serverResponse, LOADING_DIALOG);
 				}
 
 				if (result == 1) {
-					loadingDialog.dismiss();
+					LOADING_DIALOG.dismiss();
 					Intent intent = new Intent(PlanetResourceView.this,Login.class);
 					PlanetResourceView.this.startActivity(intent);
 					finish();
 				}
 				else {
-					loadingDialog.dismiss();
+					LOADING_DIALOG.dismiss();
 					Toast.makeText(PlanetResourceView.this, "Something stupido has happened while the logout request was being made...", Toast.LENGTH_LONG).show();
 				}
 			}
 		});
 		
-		final String SELECTED_SERVER = selectedServer;
-		final String SESSION_ID = sessionId;
-		
 		Button viewBuildingsButton = (Button) findViewById(R.id.viewPlanetButton);
 		viewBuildingsButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				Spinner spinner = (Spinner) findViewById(R.id.selectPlanet);
+				int selectedIndex = spinner.getSelectedItemPosition();
+				
 				Intent intent = new Intent(PlanetResourceView.this,PlanetBuildingsView.class);
 				intent.putExtra("selectedServer", SELECTED_SERVER);
 				intent.putExtra("sessionId", SESSION_ID);
+				intent.putExtra("selectedBodyId", PLANET_IDS[selectedIndex].toString());
 				PlanetResourceView.this.startActivity(intent);
 			}
 		});
     }
     
-    public String refreshResources(String sessionId,String homePlanetId,String selectedServer,ProgressDialog loadingdialog) {
-    	ProgressDialog loadingDialog = Library.loadingDialog(PlanetResourceView.this, "Loading...");
-    	loadingDialog.show();
+    public String refreshResources(String sessionId,String homePlanetId,String selectedServer) {
+    	ProgressDialog loadingDialog = new ProgressDialog(PlanetResourceView.this);
+        loadingDialog.setMessage("Loading...");
+        
+        final ProgressDialog LOADING_DIALOG = loadingDialog;
+        LOADING_DIALOG.show();
     	
     	String[] paramsBuilder = {sessionId,homePlanetId};
 		String params = Library.parseParams(paramsBuilder);
@@ -249,8 +254,8 @@ public class PlanetResourceView extends Activity {
 			planetName = body.getString("name");
 		}
 		catch (JSONException e) {
-			loadingDialog.dismiss();
-			Library.handleError(PlanetResourceView.this, serverResponse, loadingDialog);
+			LOADING_DIALOG.dismiss();
+			Library.handleError(PlanetResourceView.this, serverResponse, LOADING_DIALOG);
 		}
 		
 		// Organize the big numbers the server has returned
@@ -284,7 +289,7 @@ public class PlanetResourceView extends Activity {
 		Button viewBuildingsButton = (Button) findViewById(R.id.viewPlanetButton);
 		viewBuildingsButton.setText("View Buildings on " + planetName);
 
-		loadingDialog.dismiss();
+		LOADING_DIALOG.dismiss();
 
 		//For when the planets spinner needs updating
 		return serverResponse;
