@@ -1,7 +1,10 @@
 package com.lacunaexpanse.LacunaAndroidClient;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 public class PlanetBuildingsView extends Activity {
 
@@ -14,20 +17,37 @@ public class PlanetBuildingsView extends Activity {
         
         String sessionId = null;
         String selectedServer = null;
-        String selectedBodyId = null;
+        String planetId = null;
+        
         if (EXTRAS != null) {
         	sessionId = EXTRAS.getString("sessionId");
         	selectedServer = EXTRAS.getString("selectedServer");
-        	selectedBodyId = EXTRAS.getString("selectedBodyId");
+        	planetId = EXTRAS.getString("planetId");
         }
         
-        //Declare our finals
         final String SESSION_ID = sessionId;
         final String SELECTED_SERVER = selectedServer;
-        final String SELECTED_BODY_ID = selectedBodyId;
+        final String PLANET_ID = planetId;
+        
+        /*
+        String[] paramsBuilder = {SESSION_ID,SELECTED_BODY_ID};
+        String params = Library.parseParams(paramsBuilder);
+        String serverUrl = Library.assembleGetUrl(SELECTED_SERVER, "body", "get_buildings", params);
+        
+        final String serverResponse = Library.sendServerRequest(serverUrl);
+        */
+        
+        Button goBackButton = (Button) findViewById(R.id.goBackButton);
+        goBackButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				
+				Intent intent = new Intent(PlanetBuildingsView.this,PlanetResourceView.class);
+				intent.putExtra("sessionId",SESSION_ID);
+				intent.putExtra("selectedServer",SELECTED_SERVER);
+				intent.putExtra("planetId",PLANET_ID);
+				
+				PlanetBuildingsView.this.startActivity(intent);
+			}
+		});
     }
-    /*
-     * The plan from here on out, for the moment, 
-     * is to do a lot of code cleanup and make things more streamlined before moving on to other things.
-     */
 }

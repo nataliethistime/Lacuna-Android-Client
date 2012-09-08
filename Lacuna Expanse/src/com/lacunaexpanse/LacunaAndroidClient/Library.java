@@ -107,9 +107,12 @@ public class Library {
 	}
 	
 	public static String formatBigNumbers(long bigNumber) {
-		//StringBuilder sb = new StringBuilder();
 		
 		/*
+		
+		This stuff doesn't work as Ecipse says that numbers above 100 billion are "Out of int range".
+		Need to find a way to fix this...
+		
 		if(bigNumber >= 100000000000000000 || bigNumber <= -100000000000000000) {
             //101Q
             return bigNumber/1000000000000000 + "Q";
@@ -131,24 +134,20 @@ public class Library {
             return bigNumber/1000000000 + "B";
         }
         */
-        if(bigNumber >= 1000000000 || bigNumber <= -1000000000) {
-            //75.3B
+		
+        if (bigNumber >= 1000000000 || bigNumber <= -1000000000) {
             return bigNumber/100000000 / 10 + "B";
         }
-        else if(bigNumber >= 100000000 || bigNumber <= -100000000) {
-            //101M
+        else if (bigNumber >= 100000000 || bigNumber <= -100000000) {
             return bigNumber/1000000 + "M";
         }
-        else if(bigNumber >= 1000000 || bigNumber <= -1000000) {
-            //75.3M
+        else if (bigNumber >= 1000000 || bigNumber <= -1000000) {
             return bigNumber/100000 / 10 + "M";
         }
-        else if(bigNumber >= 10000 || bigNumber <= -10000) {
-            //123k
+        else if (bigNumber >= 10000 || bigNumber <= -10000) {
             return bigNumber/1000 + "k";
         }
         else {
-            //8765
             return "" + bigNumber;
         }
 	}

@@ -30,11 +30,6 @@
         <activity
             android:name=".PlanetBuildingsView"
             android:label="@string/title_activity_planet_buildings_view" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

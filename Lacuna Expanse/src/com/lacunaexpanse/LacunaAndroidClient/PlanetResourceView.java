@@ -25,109 +25,29 @@ public class PlanetResourceView extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_planet_resource_view);
         
-        final long spinnerReset = System.currentTimeMillis();
-        
         ProgressDialog loadingDialog = new ProgressDialog(PlanetResourceView.this);
         loadingDialog.setMessage("Loading...");
         
         final ProgressDialog LOADING_DIALOG = loadingDialog;
-        LOADING_DIALOG.show();
         
         String sessionId = null;
-        String serverResponseFromPreviousActivity = null;
         String selectedServer = null;
+        String planetId = null;
         
         final Bundle EXTRAS = getIntent().getExtras(); 
         
         if (EXTRAS != null) {
         	sessionId = EXTRAS.getString("sessionId");
-        	serverResponseFromPreviousActivity = EXTRAS.getString("serverResponse");
         	selectedServer = EXTRAS.getString("selectedServer");
+        	planetId = EXTRAS.getString("planetId");
         }
         
         final String SESSION_ID = sessionId;
-        final String SERVER_RESPONSE_FROM_PREVIOUS_ACTIVITY = serverResponseFromPreviousActivity;
+        final String PLANET_ID = planetId;
         final String SELECTED_SERVER = selectedServer;
-
-		// Get home_planet_id
-		String homePlanetId = null;
-		try {
-			JSONObject jObject = new JSONObject(SERVER_RESPONSE_FROM_PREVIOUS_ACTIVITY);
-			JSONObject result = jObject.getJSONObject("result");
-			JSONObject status = result.getJSONObject("status");
-			JSONObject empire = status.getJSONObject("empire");
-
-			homePlanetId = empire.getString("home_planet_id");
-		}
-		catch (JSONException e) {
-			LOADING_DIALOG.dismiss();
-			Library.handleError(PlanetResourceView.this, SERVER_RESPONSE_FROM_PREVIOUS_ACTIVITY, LOADING_DIALOG);
-		}
-		final String HOME_PLANET_ID = homePlanetId;
+        
+		refreshResources(SESSION_ID,PLANET_ID,SELECTED_SERVER);
 		
-		String serverResponse = refreshResources(SESSION_ID,HOME_PLANET_ID,SELECTED_SERVER);
-
-
-		// Parse the JSON for getting the list of planets
-		Object[] planetIds = null;
-		try {
-			JSONObject jObject = new JSONObject(SERVER_RESPONSE_FROM_PREVIOUS_ACTIVITY);
-			JSONObject result = jObject.getJSONObject("result");
-			JSONObject status = result.getJSONObject("status");
-			JSONObject empire = status.getJSONObject("empire");
-			JSONObject planets = empire.getJSONObject("planets");
-
-			ArrayList<String> arrayOne = new ArrayList<String>();
-			ArrayList<String> arrayTwo = new ArrayList<String>();
-	        Iterator<?> iter = planets.keys();
-
-	        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
-	        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-	        Spinner selectPlanetSpinner = (Spinner) findViewById(R.id.selectPlanet);
-
-	        while(iter.hasNext()){
-	            String key = (String)iter.next();
-	            String value = planets.getString(key);
-
-	            arrayTwo.add(key);
-	            arrayOne.add(value);
-	        }
-
-	        Object[] planetNames = arrayOne.toArray();
-			/*Object[]*/ planetIds = arrayTwo.toArray();
-
-	        for (int i = 0; i < planetNames.length; i++) {
-	        	adapter.add(planetNames[i].toString());
-	        }
-
-	        selectPlanetSpinner.setAdapter(adapter);
-
-		}
-		catch (JSONException e) {
-			LOADING_DIALOG.dismiss();
-			Library.handleError(PlanetResourceView.this, serverResponse, LOADING_DIALOG);
-		}
-		LOADING_DIALOG.dismiss();
-
-		final Object[] PLANET_IDS = planetIds;
-
-		Spinner spinner = (Spinner) findViewById(R.id.selectPlanet);
-		spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-			public void onItemSelected(AdapterView<?> parent,View view,int pos,long id) {
-				if (System.currentTimeMillis() - spinnerReset < 2500) {
-					//Nothing!
-				}
-				else if (System.currentTimeMillis() - spinnerReset > 2500) {
-					String selectedBodyId = PLANET_IDS[pos].toString();
-
-					refreshResources(SESSION_ID,selectedBodyId,SELECTED_SERVER);
-				}
-			}
-			public void onNothingSelected(AdapterView<?> parent) {
-				// Nothing!
-			}
-		});
-
 		// Handle clicking of the "Logout" button.
 		Button logoutButton = (Button) findViewById(R.id.logoutButton);
 		logoutButton.setOnClickListener(new View.OnClickListener() {
@@ -161,34 +81,23 @@ public class PlanetResourceView extends Activity {
 					LOADING_DIALOG.dismiss();
 					Toast.makeText(PlanetResourceView.this, "Something stupido has happened while the logout request was being made...", Toast.LENGTH_LONG).show();
 				}
-			}
-		});
-		
-		Button viewBuildingsButton = (Button) findViewById(R.id.viewPlanetButton);
-		viewBuildingsButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				Spinner spinner = (Spinner) findViewById(R.id.selectPlanet);
-				int selectedIndex = spinner.getSelectedItemPosition();
 				
-				Intent intent = new Intent(PlanetResourceView.this,PlanetBuildingsView.class);
-				intent.putExtra("selectedServer", SELECTED_SERVER);
-				intent.putExtra("sessionId", SESSION_ID);
-				intent.putExtra("selectedBodyId", PLANET_IDS[selectedIndex].toString());
-				PlanetResourceView.this.startActivity(intent);
+				LOADING_DIALOG.dismiss();
+				
 			}
 		});
     }
     
-    public String refreshResources(String sessionId,String homePlanetId,String selectedServer) {
+    public void refreshResources(final String SESSION_ID,final String PLANET_ID,final String SELECTED_SERVER) {
     	ProgressDialog loadingDialog = new ProgressDialog(PlanetResourceView.this);
         loadingDialog.setMessage("Loading...");
         
         final ProgressDialog LOADING_DIALOG = loadingDialog;
         LOADING_DIALOG.show();
     	
-    	String[] paramsBuilder = {sessionId,homePlanetId};
+    	String[] paramsBuilder = {SESSION_ID,PLANET_ID};
 		String params = Library.parseParams(paramsBuilder);
-		String serverUrl = Library.assembleGetUrl(selectedServer, "body", "get_status", params);
+		String serverUrl = Library.assembleGetUrl(SELECTED_SERVER, "body", "get_status", params);
 
 		String serverResponse = Library.sendServerRequest(serverUrl);
 
@@ -220,7 +129,7 @@ public class PlanetResourceView extends Activity {
 		long wasteStorage     = 0;
 		long wasteStored      = 0;
 
-		String planetName       = null;
+		String planetName     = null;
 		try {
 			JSONObject jObject = new JSONObject(serverResponse);
 			JSONObject result = jObject.getJSONObject("result");
@@ -286,12 +195,79 @@ public class PlanetResourceView extends Activity {
 		energyInformationOutput.setText("Energy: " + miniEnergyStored + "/" + miniEnergyStorage + " @ " + miniEnergyProduction + "/hr");
 		wasteInformationOutput.setText("Waste: " + miniWasteStored + "/" + miniWasteStorage + " @ " + miniWasteProduction + "/hr");
 		
+		// Parse the JSON for getting the list of planets
+		Object[] planetIds = null;
+		try {
+			JSONObject jObject = new JSONObject(serverResponse);
+			JSONObject result = jObject.getJSONObject("result");
+			JSONObject empire = result.getJSONObject("empire");
+			JSONObject planets = empire.getJSONObject("planets");
+
+			ArrayList<String> arrayOne = new ArrayList<String>();
+			ArrayList<String> arrayTwo = new ArrayList<String>();
+			Iterator<?> iter = planets.keys();
+
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			Spinner selectPlanetSpinner = (Spinner) findViewById(R.id.selectPlanet);
+
+			while(iter.hasNext()) {
+			    String key = (String)iter.next();
+			    String value = planets.getString(key);
+
+			    arrayTwo.add(key);
+			    arrayOne.add(value);
+			}
+
+			Object[] planetNames = arrayOne.toArray();
+			/*Object[]*/ planetIds = arrayTwo.toArray();
+
+			for (int i = 0; i < planetNames.length; i++) {
+				adapter.add(planetNames[i].toString());
+			}
+
+			selectPlanetSpinner.setAdapter(adapter);
+
+		}
+		catch (JSONException e) {
+			LOADING_DIALOG.dismiss();
+			Library.handleError(PlanetResourceView.this, serverResponse, LOADING_DIALOG);
+		}
+		
+		final Object[] PLANET_IDS = planetIds;
+		
 		Button viewBuildingsButton = (Button) findViewById(R.id.viewPlanetButton);
 		viewBuildingsButton.setText("View Buildings on " + planetName);
+		
+		viewBuildingsButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(PlanetResourceView.this,PlanetBuildingsView.class);
+				
+				intent.putExtra("sessionId", SESSION_ID);
+				intent.putExtra("selectedServer", SELECTED_SERVER);
+				intent.putExtra("planetId", PLANET_ID);
+				PlanetResourceView.this.startActivity(intent);
+			}
+		});
+		
+		final long SPINNER_RESET = System.currentTimeMillis();
+		
+		Spinner selectPlanet = (Spinner) findViewById(R.id.selectPlanet);
+		selectPlanet.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			public void onItemSelected(AdapterView<?> parent,View view,int pos,long id) {
+				if (System.currentTimeMillis() - SPINNER_RESET < 1000) {
+					//Nothing!
+				}
+				else if (System.currentTimeMillis() - SPINNER_RESET > 1000) {
+					final String SELECTED_PLANET = PLANET_IDS[pos].toString();
 
+					refreshResources(SESSION_ID,SELECTED_PLANET,SELECTED_SERVER);
+				}
+			}
+			public void onNothingSelected(AdapterView<?> parent) {
+				// Nothing!
+			}
+		});
 		LOADING_DIALOG.dismiss();
-
-		//For when the planets spinner needs updating
-		return serverResponse;
     }
 }

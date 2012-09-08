@@ -24,8 +24,11 @@ public class Login extends Activity {
 
 		loginButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				ProgressDialog loadingDialog = Library.loadingDialog(Login.this,"Loading...");
-				loadingDialog.show();
+				ProgressDialog loadingDialog = new ProgressDialog(Login.this);
+				loadingDialog.setMessage("Loading...");
+				
+				final ProgressDialog LOADING_DIALOG = loadingDialog;
+				LOADING_DIALOG.show();
 
 				// Get entered empire name and password
 				EditText empireNameField = (EditText) findViewById(R.id.empireNameField);
@@ -38,20 +41,19 @@ public class Login extends Activity {
 				int indexValue = selectServerSpinner.getSelectedItemPosition();
 
 				if (empireName.length() <= 0) {
-					loadingDialog.dismiss();
+					LOADING_DIALOG.dismiss();
 					Toast.makeText(Login.this,"Please enter your empire name",Toast.LENGTH_SHORT).show();
 				}
 				else if (empirePassword.length() <= 0) {
-					loadingDialog.dismiss();
+					LOADING_DIALOG.dismiss();
 					Toast.makeText(Login.this,"Please enter your empire password",Toast.LENGTH_SHORT).show();
-					empireNameField.setText("");
 				}
 				else {
 					// Set selectedServer and apiKey based on selected item in Spinner. Server defaults to US1.
 					String selectedServer = null;
 					String apiKey = null;
 					if (indexValue == 0) {
-						loadingDialog.dismiss();
+						LOADING_DIALOG.dismiss();
 						Toast.makeText(Login.this,"Please select a server",Toast.LENGTH_SHORT).show();
 					}
 					else if (indexValue == 1) {
@@ -66,39 +68,51 @@ public class Login extends Activity {
 						selectedServer = "us1";
 						apiKey = "01420b89-22d4-437f-b355-b99df1f4c8ea";
 					}
+					
+					final String SELECTED_SERVER = selectedServer;
+					final String API_KEY = apiKey;
 
 					// Doing this stops it from crashing randomly when no server is selected
 					if (selectedServer != null && apiKey != null) {
-						// Create params and create GET URL.
-						String[] paramsBuilder = {empireName,empirePassword,apiKey};
+						String[] paramsBuilder = {empireName,empirePassword,API_KEY};
 						String params = Library.parseParams(paramsBuilder);
 						String serverUrl = Library.assembleGetUrl(selectedServer,"empire","login",params);
 
-						// Send to server.
 						String serverResponse = Library.sendServerRequest(serverUrl);
 
 						// Parse received JSON data
 						String sessionId = null;
+						String homePlanetId= null;
 						try {
 							JSONObject jObject = new JSONObject(serverResponse);
 							JSONObject result = jObject.getJSONObject("result");
-
+							
 							sessionId = result.getString("session_id");
+							
+							
+							JSONObject status = result.getJSONObject("status");
+							JSONObject empire = status.getJSONObject("empire");
+
+							homePlanetId = empire.getString("home_planet_id");
 						}
 						catch(JSONException e) {
-							Library.handleError(Login.this,serverResponse,loadingDialog);
+							LOADING_DIALOG.dismiss();
+							passWordField.setText("");
+							Library.handleError(Login.this,serverResponse,LOADING_DIALOG);
 						}
-						loadingDialog.dismiss();
-
+						
+						LOADING_DIALOG.dismiss();
+						final String SESSION_ID = sessionId;
+						final String HOME_PLANET_ID = homePlanetId;
+						
 						// Need to do this outside the try statement
 						if (sessionId != null) {
-							// Load session id and server response into an intent for passing into the next Activity
 							Intent intent = new Intent(Login.this,PlanetResourceView.class);
-							intent.putExtra("selectedServer", selectedServer);
-							intent.putExtra("sessionId", sessionId);
-							intent.putExtra("serverResponse", serverResponse); // So we can get the home_planet_id
+							intent.putExtra("selectedServer", SELECTED_SERVER);
+							intent.putExtra("sessionId", SESSION_ID);
+							intent.putExtra("planetId", HOME_PLANET_ID);
+							intent.putExtra("serverResponse", serverResponse);
 
-							// Start PlanetView Activity
 							Login.this.startActivity(intent);
 							finish();
 						}

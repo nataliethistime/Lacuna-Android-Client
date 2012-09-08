@@ -12,5 +12,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_select_planet">SelectPlanet</string>
     <string name="title_activity_planet_buildings_view">PlanetBuildingsView</string>
+    <string name="empireName">Empire Name</string>
+    <string name="passWord">Empire Password</string>
+    <string name="goBack">Go Back</string>
 
 </resources>

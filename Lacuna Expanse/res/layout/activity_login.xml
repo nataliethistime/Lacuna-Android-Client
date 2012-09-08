@@ -21,7 +21,8 @@
         android:layout_gravity="center"
         android:ems="10"
         android:inputType="text"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:hint="@string/empireName" />
 
     <EditText
         android:id="@+id/passWordField"
@@ -30,8 +31,8 @@
         android:layout_gravity="center"
         android:ems="10"
         android:inputType="textPassword"
-        android:singleLine="true" >
-    </EditText>
+        android:singleLine="true"
+        android:hint="@string/passWord" />
 
     <Spinner
         android:id="@+id/selectServer"
