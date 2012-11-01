@@ -1,10 +1,14 @@
 package com.lacunaexpanse.LacunaAndroidClient;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class PlanetBuildingsView extends Activity {
 
@@ -29,13 +33,18 @@ public class PlanetBuildingsView extends Activity {
         final String SELECTED_SERVER = selectedServer;
         final String PLANET_ID = planetId;
         
-        /*
-        String[] paramsBuilder = {SESSION_ID,SELECTED_BODY_ID};
+        String[] paramsBuilder = {SESSION_ID,PLANET_ID};
         String params = Library.parseParams(paramsBuilder);
         String serverUrl = Library.assembleGetUrl(SELECTED_SERVER, "body", "get_buildings", params);
         
         final String serverResponse = Library.sendServerRequest(serverUrl);
-        */
+        
+        try {
+        	JSONObject jObject = new JSONObject(serverResponse);
+        }
+        catch (JSONException e) {
+        	Toast.makeText(PlanetBuildingsView.this, "Error interpereting server response: " + e.toString(), Toast.LENGTH_LONG).show();
+        }
         
         Button goBackButton = (Button) findViewById(R.id.goBackButton);
         goBackButton.setOnClickListener(new View.OnClickListener() {

@@ -44,9 +44,9 @@ public class Login extends Activity {
 		Button loginButton = (Button) findViewById(R.id.loginButton);
 		loginButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				
 				ProgressDialog loadingDialog = new ProgressDialog(Login.this);
 				loadingDialog.setMessage("Loading...");
-				
 				final ProgressDialog LOADING_DIALOG = loadingDialog;
 				LOADING_DIALOG.show();
 
