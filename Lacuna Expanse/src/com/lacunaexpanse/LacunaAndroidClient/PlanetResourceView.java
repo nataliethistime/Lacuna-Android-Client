@@ -212,7 +212,7 @@ public class PlanetResourceView extends Activity {
 			Spinner selectPlanetSpinner = (Spinner) findViewById(R.id.selectPlanet);
 
 			while(iter.hasNext()) {
-			    String key = (String)iter.next();
+			    String key = (String) iter.next();
 			    String value = planets.getString(key);
 
 			    arrayTwo.add(key);
