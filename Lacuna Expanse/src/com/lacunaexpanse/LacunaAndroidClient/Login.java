@@ -4,7 +4,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -44,11 +43,6 @@ public class Login extends Activity {
 		Button loginButton = (Button) findViewById(R.id.loginButton);
 		loginButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				
-				ProgressDialog loadingDialog = new ProgressDialog(Login.this);
-				loadingDialog.setMessage("Loading...");
-				final ProgressDialog LOADING_DIALOG = loadingDialog;
-				LOADING_DIALOG.show();
 
 				// Get entered empire name and password
 				EditText empireNameField = (EditText) findViewById(R.id.empireNameField);
@@ -61,11 +55,9 @@ public class Login extends Activity {
 				int indexValue = selectServerSpinner.getSelectedItemPosition();
 
 				if (empireName.length() <= 0) {
-					LOADING_DIALOG.dismiss();
 					Toast.makeText(Login.this,"Please enter your empire name.",Toast.LENGTH_SHORT).show();
 				}
 				else if (empirePassword.length() <= 0) {
-					LOADING_DIALOG.dismiss();
 					Toast.makeText(Login.this,"Please enter your empire password.",Toast.LENGTH_SHORT).show();
 				}
 				else {
@@ -73,7 +65,6 @@ public class Login extends Activity {
 					String selectedServer = null;
 					String apiKey = null;
 					if (indexValue == 0) {
-						LOADING_DIALOG.dismiss();
 						Toast.makeText(Login.this,"Please select a server.",Toast.LENGTH_SHORT).show();
 					}
 					else if (indexValue == 1) {
@@ -116,12 +107,10 @@ public class Login extends Activity {
 							homePlanetId = empire.getString("home_planet_id");
 						}
 						catch(JSONException e) {
-							LOADING_DIALOG.dismiss();
 							passWordField.setText("");
-							Library.handleError(Login.this,serverResponse,LOADING_DIALOG);
+							Library.handleError(Login.this,serverResponse);
 						}
 						
-						LOADING_DIALOG.dismiss();
 						final String SESSION_ID = sessionId;
 						final String HOME_PLANET_ID = homePlanetId;
 						
