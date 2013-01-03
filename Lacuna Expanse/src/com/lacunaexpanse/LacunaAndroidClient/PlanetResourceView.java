@@ -1,6 +1,7 @@
 package com.lacunaexpanse.LacunaAndroidClient;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 import org.json.JSONException;
@@ -188,7 +189,7 @@ public class PlanetResourceView extends Activity {
 		String miniWasteStorage = Library.formatBigNumbers(wasteStorage);
 		String miniWasteProduction = Library.formatBigNumbers(wasteProduction);
 		
-		planetNameOutput.setText("Planet: " + planetName);
+		planetNameOutput.setText(planetName);
 		foodInformationOutput.setText("Food: " + miniFoodStored + "/" + miniFoodStorage + " @ " + miniFoodProduction + "/hr");
 		oreInformationOutput.setText("Ore: " + miniOreStored + "/" + miniOreStorage + " @ " + miniOreProduction + "/hr");
 		waterInformationOutput.setText("Water: " + miniWaterStored + "/" + miniWaterStorage + " @ " + miniWaterProduction + "/hr");
@@ -196,45 +197,42 @@ public class PlanetResourceView extends Activity {
 		wasteInformationOutput.setText("Waste: " + miniWasteStored + "/" + miniWasteStorage + " @ " + miniWasteProduction + "/hr");
 		
 		// Parse the JSON for getting the list of planets
-		Object[] planetIds = null;
+		JSONObject reversedPlanets = new JSONObject();
 		try {
 			JSONObject jObject = new JSONObject(serverResponse);
 			JSONObject result = jObject.getJSONObject("result");
 			JSONObject empire = result.getJSONObject("empire");
 			JSONObject planets = empire.getJSONObject("planets");
-
-			ArrayList<String> arrayOne = new ArrayList<String>();
-			ArrayList<String> arrayTwo = new ArrayList<String>();
-			Iterator<?> iter = planets.keys();
-
+			
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
 			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			Spinner selectPlanetSpinner = (Spinner) findViewById(R.id.selectPlanet);
-
+			
+			ArrayList<String> planetNames = new ArrayList<String>();
+			planetNames.add("AAAAAAAAAAAAAAAA"); // Make sure this one stays at the top as a placeholder for the "Select Planet" option.
+			Iterator<?> iter = planets.keys();
+			
 			while(iter.hasNext()) {
 			    String key = (String) iter.next();
 			    String value = planets.getString(key);
 
-			    arrayTwo.add(key);
-			    arrayOne.add(value);
+			    reversedPlanets.put(value, key);
+			    planetNames.add(value);
 			}
-
-			Object[] planetNames = arrayOne.toArray();
-			/*Object[]*/ planetIds = arrayTwo.toArray();
-
-			for (int i = 0; i < planetNames.length; i++) {
-				adapter.add(planetNames[i].toString());
+			Collections.sort(planetNames);
+			for (int i = 0; i < planetNames.size(); i++) {
+				if (planetNames.get(i) == "AAAAAAAAAAAAAAAA") {
+				}
+				else {
+					adapter.add(planetNames.get(i));
+				}
 			}
-
 			selectPlanetSpinner.setAdapter(adapter);
-
 		}
 		catch (JSONException e) {
 			LOADING_DIALOG.dismiss();
 			Library.handleError(PlanetResourceView.this, serverResponse, LOADING_DIALOG);
 		}
-		
-		final Object[] PLANET_IDS = planetIds;
 		
 		Button viewBuildingsButton = (Button) findViewById(R.id.viewPlanetButton);
 		viewBuildingsButton.setText("View Buildings on " + planetName);
@@ -246,11 +244,14 @@ public class PlanetResourceView extends Activity {
 				intent.putExtra("sessionId", SESSION_ID);
 				intent.putExtra("selectedServer", SELECTED_SERVER);
 				intent.putExtra("planetId", PLANET_ID);
+				
 				PlanetResourceView.this.startActivity(intent);
+				finish();
 			}
 		});
 		
 		final long SPINNER_RESET = System.currentTimeMillis();
+		final JSONObject REVERSED_PLANETS = reversedPlanets;
 		
 		Spinner selectPlanet = (Spinner) findViewById(R.id.selectPlanet);
 		selectPlanet.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -259,9 +260,25 @@ public class PlanetResourceView extends Activity {
 					//Nothing!
 				}
 				else if (System.currentTimeMillis() - SPINNER_RESET > 1000) {
-					final String SELECTED_PLANET = PLANET_IDS[pos].toString();
-
-					refreshResources(SESSION_ID,SELECTED_PLANET,SELECTED_SERVER);
+					Spinner selectedPlanetSpinner = (Spinner) findViewById(R.id.selectPlanet);
+					String selectedPlanetName = selectedPlanetSpinner.getSelectedItem().toString();
+					
+					// Just in case something screws up.
+					// I don't know weather this'll actually ever get called;
+					// It's just here as a precaution.
+					if (selectedPlanetName == "Select Planet") {
+						Toast.makeText(PlanetResourceView.this, "Please actually select a planet.", Toast.LENGTH_LONG).show();
+					}
+					else {
+						String selectedId = "";
+						try {
+							selectedId = REVERSED_PLANETS.getString(selectedPlanetName);
+						}
+						catch (JSONException e) {
+							e.printStackTrace();
+						}
+						refreshResources(SESSION_ID,selectedId,SELECTED_SERVER);
+					}
 				}
 			}
 			public void onNothingSelected(AdapterView<?> parent) {

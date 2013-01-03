@@ -1,22 +1,13 @@
 package com.lacunaexpanse.LacunaAndroidClient;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.Toast;
 
-public class PlanetBuildingsView extends Activity {
+class PlanetBuildingsView extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,6 +30,29 @@ public class PlanetBuildingsView extends Activity {
         final String SELECTED_SERVER = selectedServer;
         final String PLANET_ID = planetId;
         
+        /*--------------------------*/
+        
+        
+        
+        
+        /*Dear followers,
+         * 
+         * I am unable to continue with this class. My computer takes 20 minutes to compile 
+         * the app when all the building assets are imported; much too long. So, I have to leave
+         * it for the time being. I am planning to spend my Christmas money on a new computer.
+         * But such a thing is still in the planning stage.
+         * 
+         * -The Vasari
+         */
+        
+        
+        
+        
+        /*--------------------------*/
+        
+        
+        /*
+        
         String[] paramsBuilder = {SESSION_ID,PLANET_ID};
         String params = Library.parseParams(paramsBuilder);
         String serverUrl = Library.assembleGetUrl(SELECTED_SERVER, "body", "get_buildings", params);
@@ -50,7 +64,10 @@ public class PlanetBuildingsView extends Activity {
          * If you are reading this and and think this is crazy . . . never fear; 
          * I doubt that half of it will work myself. :)
          * 
-         */
+         * NOTE TO SELF: All Image names with hyphens in them have been removed!!!!
+         * MAKE SURE TO RE ADD WHEN A FIX IS FOUND!
+        
+        Log.d("This is a tag.", "Made it to declaring the planetPlots[]");
         
         // This will be fun...
         ImageView[] planetPlots = {};
@@ -224,17 +241,81 @@ public class PlanetBuildingsView extends Activity {
             	buildingImage[i] = BUILDING_INFO[i].getString("image");
             	buildingEfficiency[i] = BUILDING_INFO[i].getString("efficiency");
             	
-            	// In the grand scheme of things this is the most worrying thing for me.
+            	// In the grand scheme of things, this is the most worrying thing for me.
+            	Resources resources = getResources();
             	if (xCoords[i] == "-5" && yCoords[i] == "5") {
-            		Resources resources = getResources();
             		String drawableName = buildingImage[i];
-            		int resID = resources.getIdentifier(drawableName , "drawable", getPackageName());
-            		Drawable drawable = resources.getDrawable(resID );
+            		int resId = resources.getIdentifier(drawableName , "drawable", getPackageName());
+            		Drawable drawable = resources.getDrawable(resId);
             		planetPlots[0].setImageDrawable(drawable);
+            		
+            		planetPlots[0].setTag(0,BUILDING_IDS[i]);
+            		planetPlots[0].setTag(1,buildingUrl[i]);
+				}
+            	else if (xCoords[i] == "-5" && yCoords[i] == "4") {
+            		String drawableName = buildingImage[i];
+            		int resId = resources.getIdentifier(drawableName , "drawable", getPackageName());
+            		Drawable drawable = resources.getDrawable(resId);
+            		planetPlots[1].setImageDrawable(drawable);
+				}
+            	else if (xCoords[i] == "-5" && yCoords[i] == "3") {
+            		String drawableName = buildingImage[i];
+            		int resId = resources.getIdentifier(drawableName , "drawable", getPackageName());
+            		Drawable drawable = resources.getDrawable(resId);
+            		planetPlots[2].setImageDrawable(drawable);
+				}
+            	else if (xCoords[i] == "-5" && yCoords[i] == "2") {
+            		String drawableName = buildingImage[i];
+            		int resId = resources.getIdentifier(drawableName , "drawable", getPackageName());
+            		Drawable drawable = resources.getDrawable(resId);
+            		planetPlots[3].setImageDrawable(drawable);
+				}
+            	else if (xCoords[i] == "-5" && yCoords[i] == "1") {
+            		String drawableName = buildingImage[i];
+            		int resId = resources.getIdentifier(drawableName , "drawable", getPackageName());
+            		Drawable drawable = resources.getDrawable(resId);
+            		planetPlots[4].setImageDrawable(drawable);
+				}
+            	else if (xCoords[i] == "-5" && yCoords[i] == "0") {
+            		String drawableName = buildingImage[i];
+            		int resId = resources.getIdentifier(drawableName , "drawable", getPackageName());
+            		Drawable drawable = resources.getDrawable(resId);
+            		planetPlots[5].setImageDrawable(drawable);
+				}
+            	else if (xCoords[i] == "-5" && yCoords[i] == "-1") {
+            		String drawableName = buildingImage[i];
+            		int resId = resources.getIdentifier(drawableName , "drawable", getPackageName());
+            		Drawable drawable = resources.getDrawable(resId);
+            		planetPlots[6].setImageDrawable(drawable);
+				}
+            	else if (xCoords[i] == "-5" && yCoords[i] == "-2") {
+            		String drawableName = buildingImage[i];
+            		int resId = resources.getIdentifier(drawableName , "drawable", getPackageName());
+            		Drawable drawable = resources.getDrawable(resId);
+            		planetPlots[7].setImageDrawable(drawable);
+				}
+            	else if (xCoords[i] == "-5" && yCoords[i] == "-3") {
+            		String drawableName = buildingImage[i];
+            		int resId = resources.getIdentifier(drawableName , "drawable", getPackageName());
+            		Drawable drawable = resources.getDrawable(resId);
+            		planetPlots[8].setImageDrawable(drawable);
+				}
+            	else if (xCoords[i] == "-5" && yCoords[i] == "-4") {
+            		String drawableName = buildingImage[i];
+            		int resId = resources.getIdentifier(drawableName , "drawable", getPackageName());
+            		Drawable drawable = resources.getDrawable(resId);
+            		planetPlots[9].setImageDrawable(drawable);
+				}
+            	else if (xCoords[i] == "-5" && yCoords[i] == "-5") {
+            		String drawableName = buildingImage[i];
+            		int resId = resources.getIdentifier(drawableName , "drawable", getPackageName());
+            		Drawable drawable = resources.getDrawable(resId);
+            		planetPlots[10].setImageDrawable(drawable);
 				}
             	
         	}
         	
+        	// Set the click listeners for all the Images.
         	for (int i = 0; i < planetPlots.length; i++) {
         		planetPlots[i].setOnClickListener(new View.OnClickListener() {
 					public void onClick(View v) {
@@ -249,6 +330,8 @@ public class PlanetBuildingsView extends Activity {
         	Toast.makeText(PlanetBuildingsView.this, "Error interpereting server response: " + e.toString(), Toast.LENGTH_LONG).show();
         }
         
+        */
+        
         Button goBackButton = (Button) findViewById(R.id.goBackButton);
         goBackButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -259,6 +342,7 @@ public class PlanetBuildingsView extends Activity {
 				intent.putExtra("planetId",PLANET_ID);
 				
 				PlanetBuildingsView.this.startActivity(intent);
+				finish();
 			}
 		});
     }

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">Lacuna Expanse</string>
@@ -10,7 +11,6 @@
     <string name="logout">Logout</string>
     <string name="selectDifPlanet">Change Planet</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_select_planet">SelectPlanet</string>
     <string name="title_activity_planet_buildings_view">PlanetBuildingsView</string>
     <string name="empireName">Empire Name</string>
     <string name="passWord">Empire Password</string>

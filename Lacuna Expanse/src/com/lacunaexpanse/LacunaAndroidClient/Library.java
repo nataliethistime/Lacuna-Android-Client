@@ -136,7 +136,7 @@ public class Library {
         */
 		
         if (bigNumber >= 1000000000 || bigNumber <= -1000000000) {
-            return bigNumber/100000000 / 10 + "B";
+            return bigNumber/100000000 / 10+ "B";
         }
         else if (bigNumber >= 100000000 || bigNumber <= -100000000) {
             return bigNumber/1000000 + "M";
