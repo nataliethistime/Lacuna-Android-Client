@@ -1,9 +1,3 @@
-Please note:
-============
-The project is currently on hold as I have some real life issues to sort out. Watch this space.
-===============================================================================================
-
-
 Lacuna-Android-Client
 =====================
 
