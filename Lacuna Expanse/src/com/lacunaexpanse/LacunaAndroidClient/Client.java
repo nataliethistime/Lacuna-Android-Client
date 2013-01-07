@@ -16,11 +16,13 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
+import android.widget.Toast;
 
 public class Client {
 	// Declare some variables.
@@ -42,11 +44,14 @@ public class Client {
 		API_KEY     = apiKey;
 		CONTEXT     = context;
 		
-		
 		JSONObject result = send(false, new String[]{EMPIRE_NAME, EMPIRE_PASS, API_KEY}, "empire", "login");
+		SESSION_ID = JsonParser.getS(result, "session_id");
 		
-		Object[] sessionIdObject = get(result, "session_id", 1);
-		SESSION_ID               = sessionIdObject.toString();
+		//Object[] sessionIdObject = get(result, "session_id", 1);
+		//SESSION_ID               = sessionIdObject.toString();
+		
+		// Verify that all this works.
+		Toast.makeText(CONTEXT, "Session ID: " + SESSION_ID, Toast.LENGTH_LONG).show();
 		
 	}
 	
@@ -102,28 +107,49 @@ public class Client {
 			
 			// Now check if the server returned a result or an error.
 			if (response.has("result")) {
-				Object[] getObject = get(response, "result", 1);
-				JSONObject result  = new JSONObject(getObject[0].toString());
+				JSONObject result   = JsonParser.getJO(response, "result");
+				//Object[] getObject = get(response, "result", 1);
+				//JSONObject result  = new JSONObject(getObject[0].toString());
 				
+				JSONObject status = JsonParser.getJO(result, "status");
 				// Store the status in cache.
-				Object[] getObject1 = get(result, "status", 1);
-				JSONObject status   = new JSONObject(getObject1[0].toString());
+				//Object[] getObject1 = get(result, "status", 1);
+				//JSONObject status   = new JSONObject(getObject1[0].toString());
 				STATUS = status;
 				
 				// Now we just return the result.
 				return result;
 			}
 			else if (response.has("error")) {
-				Object[] getObject = get(response, "result", 1);
-				JSONObject result  = new JSONObject(getObject[0].toString());
+				JSONObject error = JsonParser.getJO(response, "error");
+				//Object[] getObject2 = get(response, "result", 1);
+				//JSONObject result  = new JSONObject(getObject2[0].toString());
 				
 				// If it's an error, I don't think there's any point in caching the status.
 				//Object[] getObject1 = get(result, "status", 1);
 				//JSONObject status   = new JSONObject(getObject1[0].toString());
 				//STATUS = status;
 				
-				// Now we just return the result.
-				return result;
+				// I don't know weather I should put this into a separate method or not.
+				//Object[] getObject3 = get(result, "error", 1);
+				//JSONObject error    = new JSONObject(getObject3.toString());
+				
+				//Object[] getObject4 = get(error, "code", 1);
+				long code = JsonParser.getL(error, "code");
+				String message = JsonParser.getS(error, "message");
+				
+				Log.d("Lacuna Expanse - Debug", "Error " + code + ": " + message);
+				// Fall back to the login screen if the session expired.
+				if (code == 1006) {
+					// Print the error message to the screen. Inside the context, before it changes.
+					Toast.makeText(CONTEXT, message, Toast.LENGTH_LONG).show();
+					
+					Intent intent = new Intent(CONTEXT, Login.class);
+					CONTEXT.startActivity(intent);
+				}
+				
+				// Print the error message to the screen.
+				Toast.makeText(CONTEXT, message, Toast.LENGTH_LONG).show();
 			}
 
 	    }
@@ -167,6 +193,7 @@ public class Client {
 	 * 
 	 */
 	
+	/*
 	public static Object[] get(JSONObject jObject, String targetName, int option) {
 		if (option == 0) {
 			try {
@@ -212,4 +239,5 @@ public class Client {
 		Object[] object = {null};
 		return object;
 	}
+	*/
 }
