@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -25,50 +24,32 @@ public class PlanetResourceView extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_planet_resource_view);
         
-        String sessionId = null;
-        String selectedServer = null;
         String planetId = null;
         
         final Bundle EXTRAS = getIntent().getExtras(); 
         
         if (EXTRAS != null) {
-        	sessionId = EXTRAS.getString("sessionId");
-        	selectedServer = EXTRAS.getString("selectedServer");
         	planetId = EXTRAS.getString("planetId");
         }
         
-        final String SESSION_ID = sessionId;
         final String PLANET_ID = planetId;
-        final String SELECTED_SERVER = selectedServer;
         
-		refreshResources(SESSION_ID,PLANET_ID,SELECTED_SERVER);
+		refreshResources(PLANET_ID);
 		
 		// Handle clicking of the "Logout" button.
 		Button logoutButton = (Button) findViewById(R.id.logoutButton);
 		logoutButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-
-				String[] paramsBuilder = {SESSION_ID};
-				String params = Library.parseParams(paramsBuilder);
-				String serverUrl = Library.assembleGetUrl(SELECTED_SERVER, "empire", "logout", params);
-
-				String serverResponse = Library.sendServerRequest(serverUrl);
-
-				//Parse JSON
-				int result = 0;
-				try {
-					JSONObject jObject = new JSONObject(serverResponse);
-					result = jObject.getInt("result");
-				}
-				catch (JSONException e) {
-					Library.handleError(PlanetResourceView.this, serverResponse);
-				}
+				
+				JSONObject request = Client.send(true, new String[]{}, "empire", "logout");
+				long result        = JsonParser.getL(request, "result");
 
 				if (result == 1) {
 					Intent intent = new Intent(PlanetResourceView.this,Login.class);
 					PlanetResourceView.this.startActivity(intent);
 					finish();
 				}
+				// I don't know if this needs to be here anymore.
 				else {
 					Toast.makeText(PlanetResourceView.this, "Something stupido has happened while the logout request was being made...", Toast.LENGTH_LONG).show();
 				}
@@ -76,13 +57,10 @@ public class PlanetResourceView extends Activity {
 		});
     }
     
-    public void refreshResources(final String SESSION_ID,final String PLANET_ID,final String SELECTED_SERVER) {
-    	String[] paramsBuilder = {SESSION_ID,PLANET_ID};
-		String params = Library.parseParams(paramsBuilder);
-		String serverUrl = Library.assembleGetUrl(SELECTED_SERVER, "body", "get_status", params);
-
-		String serverResponse = Library.sendServerRequest(serverUrl);
-
+    public void refreshResources(final String PLANET_ID) {
+		JSONObject result = Client.send(true, new String[]{PLANET_ID}, "body", "get_status");
+		JSONObject body   = JsonParser.getJO(result, "body");
+		
 		TextView planetNameOutput = (TextView) findViewById(R.id.planetName);
 		TextView foodInformationOutput = (TextView) findViewById(R.id.foodProductionInfo);
 		TextView oreInformationOutput = (TextView) findViewById(R.id.oreProductionInfo);
@@ -90,128 +68,65 @@ public class PlanetResourceView extends Activity {
 		TextView energyInformationOutput = (TextView) findViewById(R.id.energyProductionInfo);
 		TextView wasteInformationOutput = (TextView) findViewById(R.id.wasteProductionInfo);
 
-		// Parse JSON from server getting production/resource information
-		long foodProduction   = 0;
-		long foodStorage      = 0;
-		long foodStored       = 0;
+		// Parse and round the numbers.
+		String foodProduction   = Library.formatBigNumbers(JsonParser.getL(body, "food_hour"));
+		String foodStorage      = Library.formatBigNumbers(JsonParser.getL(body, "food_hour"));
+		String foodStored       = Library.formatBigNumbers(JsonParser.getL(body, "food_stored"));
 
-		long oreProduction    = 0;
-		long oreStorage       = 0;
-		long oreStored        = 0;
+		String oreProduction    = Library.formatBigNumbers(JsonParser.getL(body, "ore_hour"));
+		String oreStorage       = Library.formatBigNumbers(JsonParser.getL(body, "ore_hour"));
+		String oreStored        = Library.formatBigNumbers(JsonParser.getL(body, "ore_stored"));
 
-		long waterProduction  = 0;
-		long waterStorage     = 0;
-		long waterStored      = 0;
+		String waterProduction  = Library.formatBigNumbers(JsonParser.getL(body, "water_hour"));
+		String waterStorage     = Library.formatBigNumbers(JsonParser.getL(body, "water_hour"));
+		String waterStored      = Library.formatBigNumbers(JsonParser.getL(body, "water_stored"));
 
-		long energyProduction = 0;
-		long energyStorage    = 0;
-		long energyStored     = 0;
+		String energyProduction = Library.formatBigNumbers(JsonParser.getL(body, "energy_hour"));
+		String energyStorage    = Library.formatBigNumbers(JsonParser.getL(body, "energy_hour"));
+		String energyStored     = Library.formatBigNumbers(JsonParser.getL(body, "energy_stored"));
 
-		long wasteProduction  = 0;
-		long wasteStorage     = 0;
-		long wasteStored      = 0;
+		String wasteProduction  = Library.formatBigNumbers(JsonParser.getL(body, "waste_hour"));
+		String wasteStorage     = Library.formatBigNumbers(JsonParser.getL(body, "waste_hour"));
+		String wasteStored      = Library.formatBigNumbers(JsonParser.getL(body, "waste_stored"));
 
-		String planetName     = null;
-		try {
-			JSONObject jObject = new JSONObject(serverResponse);
-			JSONObject result = jObject.getJSONObject("result");
-			JSONObject body = result.getJSONObject("body");
-
-			// Get food information
-			foodProduction = body.getLong("food_hour");
-			foodStorage = body.getLong("food_capacity");
-			foodStored = body.getLong("food_stored");
-
-			// Get ore information
-			oreProduction = body.getLong("ore_hour");
-			oreStorage = body.getLong("ore_capacity");
-			oreStored = body.getLong("ore_stored");
-
-			// Get water information
-			waterProduction = body.getLong("water_hour");
-			waterStorage = body.getLong("water_capacity");
-			waterStored = body.getLong("water_stored");
-
-			// Get energy information
-			energyProduction = body.getLong("energy_hour");
-			energyStorage = body.getLong("energy_capacity");
-			energyStored = body.getLong("energy_stored");
-
-			// Get waste information
-			wasteProduction = body.getLong("waste_hour");
-			wasteStorage = body.getLong("waste_capacity");
-			wasteStored = body.getLong("waste_stored");
-
-			planetName = body.getString("name");
-		}
-		catch (JSONException e) {
-			Library.handleError(PlanetResourceView.this, serverResponse);
-		}
-		
-		// Organize the big numbers the server has returned
-		String miniFoodStored = Library.formatBigNumbers(foodStored);
-		String miniFoodStorage = Library.formatBigNumbers(foodStorage);
-		String miniFoodProduction = Library.formatBigNumbers(foodProduction);
-		
-		String miniOreStored = Library.formatBigNumbers(oreStored);
-		String miniOreStorage = Library.formatBigNumbers(oreStorage);
-		String miniOreProduction = Library.formatBigNumbers(oreProduction);
-		
-		String miniWaterStored = Library.formatBigNumbers(waterStored);
-		String miniWaterStorage = Library.formatBigNumbers(waterStorage);
-		String miniWaterProduction = Library.formatBigNumbers(waterProduction);
-		
-		String miniEnergyStored = Library.formatBigNumbers(energyStored);
-		String miniEnergyStorage = Library.formatBigNumbers(energyStorage);
-		String miniEnergyProduction = Library.formatBigNumbers(energyProduction);
-		
-		String miniWasteStored = Library.formatBigNumbers(wasteStored);
-		String miniWasteStorage = Library.formatBigNumbers(wasteStorage);
-		String miniWasteProduction = Library.formatBigNumbers(wasteProduction);
+		String planetName = JsonParser.getS(body, "name");
 		
 		planetNameOutput.setText(planetName);
-		foodInformationOutput.setText("Food: " + miniFoodStored + "/" + miniFoodStorage + " @ " + miniFoodProduction + "/hr");
-		oreInformationOutput.setText("Ore: " + miniOreStored + "/" + miniOreStorage + " @ " + miniOreProduction + "/hr");
-		waterInformationOutput.setText("Water: " + miniWaterStored + "/" + miniWaterStorage + " @ " + miniWaterProduction + "/hr");
-		energyInformationOutput.setText("Energy: " + miniEnergyStored + "/" + miniEnergyStorage + " @ " + miniEnergyProduction + "/hr");
-		wasteInformationOutput.setText("Waste: " + miniWasteStored + "/" + miniWasteStorage + " @ " + miniWasteProduction + "/hr");
+		foodInformationOutput.setText("Food: " + foodStored + "/" + foodStorage + " @ " + foodProduction + "/hr");
+		oreInformationOutput.setText("Ore: " + oreStored + "/" + oreStorage + " @ " + oreProduction + "/hr");
+		waterInformationOutput.setText("Water: " + waterStored + "/" + waterStorage + " @ " + waterProduction + "/hr");
+		energyInformationOutput.setText("Energy: " + energyStored + "/" + energyStorage + " @ " + energyProduction + "/hr");
+		wasteInformationOutput.setText("Waste: " + wasteStored + "/" + wasteStorage + " @ " + wasteProduction + "/hr");
 		
 		// Parse the JSON for getting the list of planets
 		JSONObject reversedPlanets = new JSONObject();
-		try {
-			JSONObject jObject = new JSONObject(serverResponse);
-			JSONObject result = jObject.getJSONObject("result");
-			JSONObject empire = result.getJSONObject("empire");
-			JSONObject planets = empire.getJSONObject("planets");
-			
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
-			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-			Spinner selectPlanetSpinner = (Spinner) findViewById(R.id.selectPlanet);
-			
-			ArrayList<String> planetNames = new ArrayList<String>();
-			planetNames.add("AAAAAAAAAAAAAAAA"); // Make sure this one stays at the top as a placeholder for the "Select Planet" option.
-			Iterator<?> iter = planets.keys();
-			
-			while(iter.hasNext()) {
-			    String key = (String) iter.next();
-			    String value = planets.getString(key);
+		JSONObject empire          = JsonParser.getJO(result, "empire");
+		JSONObject planets         = JsonParser.getJO(empire, "planets");
+		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		Spinner selectPlanetSpinner = (Spinner) findViewById(R.id.selectPlanet);
+		
+		ArrayList<String> planetNames = new ArrayList<String>();
+		planetNames.add("AAAAAAAAAAAAAAAA"); // Make sure this one stays at the top as a placeholder for the "Select Planet" option.
+		Iterator<?> iter = planets.keys();
+		
+		while(iter.hasNext()) {
+		    String key   = (String) iter.next();
+		    String value = JsonParser.getS(planets, key);
 
-			    reversedPlanets.put(value, key);
-			    planetNames.add(value);
-			}
-			Collections.sort(planetNames);
-			for (int i = 0; i < planetNames.size(); i++) {
-				if (planetNames.get(i) == "AAAAAAAAAAAAAAAA") {
-				}
-				else {
-					adapter.add(planetNames.get(i));
-				}
-			}
-			selectPlanetSpinner.setAdapter(adapter);
+		    JsonParser.put(reversedPlanets, value, key);
+		    planetNames.add(value);
 		}
-		catch (JSONException e) {
-			Library.handleError(PlanetResourceView.this, serverResponse);
+		Collections.sort(planetNames);
+		for (int i = 0; i < planetNames.size(); i++) {
+			if (planetNames.get(i) == "AAAAAAAAAAAAAAAA") {
+			}
+			else {
+				adapter.add(planetNames.get(i));
+			}
 		}
+		selectPlanetSpinner.setAdapter(adapter);
 		
 		Button viewBuildingsButton = (Button) findViewById(R.id.viewPlanetButton);
 		viewBuildingsButton.setText("View Buildings on " + planetName);
@@ -219,9 +134,6 @@ public class PlanetResourceView extends Activity {
 		viewBuildingsButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(PlanetResourceView.this,PlanetBuildingsView.class);
-				
-				intent.putExtra("sessionId", SESSION_ID);
-				intent.putExtra("selectedServer", SELECTED_SERVER);
 				intent.putExtra("planetId", PLANET_ID);
 				
 				PlanetResourceView.this.startActivity(intent);
@@ -249,19 +161,13 @@ public class PlanetResourceView extends Activity {
 						Toast.makeText(PlanetResourceView.this, "Please actually select a planet.", Toast.LENGTH_LONG).show();
 					}
 					else {
-						String selectedId = "";
-						try {
-							selectedId = REVERSED_PLANETS.getString(selectedPlanetName);
-						}
-						catch (JSONException e) {
-							e.printStackTrace();
-						}
-						refreshResources(SESSION_ID,selectedId,SELECTED_SERVER);
+						String selectedId = JsonParser.getS(REVERSED_PLANETS, selectedPlanetName);
+						refreshResources(selectedId);
 					}
 				}
 			}
 			public void onNothingSelected(AdapterView<?> parent) {
-				// Nothing!
+				// Nothing! Amazing, eh?
 			}
 		});
     }

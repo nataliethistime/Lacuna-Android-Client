@@ -37,7 +37,7 @@ public class JsonParser {
 	}
 	
 	public static String getS(JSONObject jObject, String name) {
-		String result = null;
+		String result = "";
 		try {
 			result = jObject.getString(name);
 		}
@@ -58,5 +58,14 @@ public class JsonParser {
 		}
 		
 		return result;
+	}
+	
+	public static void put(JSONObject jObject, String name, String value) {
+		try {
+			jObject.put(name, value);
+		}
+		catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -1,6 +1,5 @@
 package com.lacunaexpanse.LacunaAndroidClient;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -20,6 +19,7 @@ public class Login extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		
+		/*
 		final int APP_VERSION = 005;
 		final String CURRENT_ONLINE_VERSION_JSON = Library.sendServerRequest("http://www.lacuna-android-client.webs.com/current_version/current_version.txt");
 		TextView versionInformation = (TextView) findViewById(R.id.versionInformation);
@@ -39,6 +39,7 @@ public class Login extends Activity {
 		else {
 			versionInformation.setText("Your version of Lacuna Expanse is out of date.\nPlease go to www.lacuna-android-client.webs.com and update the application.");
 		}
+		*/
 
 		Button loginButton = (Button) findViewById(R.id.loginButton);
 		loginButton.setOnClickListener(new View.OnClickListener() {
@@ -54,10 +55,10 @@ public class Login extends Activity {
 				Spinner selectServerSpinner = (Spinner) findViewById(R.id.selectServer);
 				int indexValue = selectServerSpinner.getSelectedItemPosition();
 
-				if (empireName.length() <= 0) {
+				if (empireName.length() <= 0 || empireName == "") {
 					Toast.makeText(Login.this,"Please enter your empire name.",Toast.LENGTH_SHORT).show();
 				}
-				else if (empirePassword.length() <= 0) {
+				else if (empirePassword.length() <= 0 || empirePassword == "") {
 					Toast.makeText(Login.this,"Please enter your empire password.",Toast.LENGTH_SHORT).show();
 				}
 				else {
@@ -83,48 +84,28 @@ public class Login extends Activity {
 					final String SELECTED_SERVER = selectedServer;
 					final String API_KEY = apiKey;
 
-					// Doing this stops it from crashing randomly when no server is selected
+					// Doing this stops it from crashing randomly when no server is selected.
 					if (selectedServer != null && apiKey != null) {
-						String[] paramsBuilder = {empireName,empirePassword,API_KEY};
-						String params = Library.parseParams(paramsBuilder);
-						String serverUrl = Library.assembleGetUrl(selectedServer,"empire","login",params);
-
-						String serverResponse = Library.sendServerRequest(serverUrl);
-
-						// Parse received JSON data
-						String sessionId = null;
-						String homePlanetId= null;
-						try {
-							JSONObject jObject = new JSONObject(serverResponse);
-							JSONObject result = jObject.getJSONObject("result");
-							
-							sessionId = result.getString("session_id");
-							
-							
-							JSONObject status = result.getJSONObject("status");
-							JSONObject empire = status.getJSONObject("empire");
-
-							homePlanetId = empire.getString("home_planet_id");
-						}
-						catch(JSONException e) {
-							passWordField.setText("");
-							Library.handleError(Login.this,serverResponse);
-						}
 						
-						final String SESSION_ID = sessionId;
-						final String HOME_PLANET_ID = homePlanetId;
+						// Initialize the Client class.
+						Client.setContext(Login.this);
+						Client.login(empireName, empirePassword, SELECTED_SERVER, API_KEY);
 						
-						// Need to do this outside the try statement
-						if (sessionId != null) {
+						// Get the home planet id.
+						//JSONObject status   = Client.STATUS;
+						//JSONObject empire   = JsonParser.getJO(status, "empire");
+						//String homePlanetId = JsonParser.getS(empire, "home_planet_id");
+						// TODO remove debug lines.
+						/*
+						final String SESSION_ID = Client.SESSION_ID;
+						if (SESSION_ID != null) {
 							Intent intent = new Intent(Login.this,PlanetResourceView.class);
-							intent.putExtra("selectedServer", SELECTED_SERVER);
-							intent.putExtra("sessionId", SESSION_ID);
-							intent.putExtra("planetId", HOME_PLANET_ID);
-							intent.putExtra("serverResponse", serverResponse);
+							intent.putExtra("planetId", homePlanetId);
 
 							Login.this.startActivity(intent);
 							finish();
 						}
+						*/
 					}
 				}
 			}
