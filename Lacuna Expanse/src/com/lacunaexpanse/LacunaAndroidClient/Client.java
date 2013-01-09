@@ -13,6 +13,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,29 +43,32 @@ public class Client {
 		API_KEY     = apiKey;
 		
 		JSONObject result = send(false, new String[]{EMPIRE_NAME, EMPIRE_PASS, API_KEY}, "empire", "login");
-		//SESSION_ID = JsonParser.getS(result, "session_id");
 		
-		// Verify that all this works.
-		//Toast.makeText(CONTEXT, "Session ID: " + SESSION_ID, Toast.LENGTH_LONG).show();
-		
+		if (result != null) {
+			Log.d("Lacuna Expanse - Debug", result.toString());
+			SESSION_ID = JsonParser.getS(result, "session_id");
+			
+			// Verify that all this works.
+			//Toast.makeText(CONTEXT, "Session ID: " + SESSION_ID, Toast.LENGTH_LONG).show();
+		}
 	}
 	
 	public static JSONObject send(boolean includeSessionId, String[] paramsArray, String module, String method) {
-		// Parse the String[] into one string.
-		String parsedParams = "[";
 		
-		for (int i = 0; i < paramsArray.length; i++) {
-			parsedParams += "\"" + paramsArray[i] + "\",";
+		JSONArray paramsJA = new JSONArray();
+		
+		// If needed, add the session Id.
+		if (includeSessionId == true) {
+			paramsJA.put(SESSION_ID);
 		}
 		
-		// Remove the comma at the end.
-		parsedParams = parsedParams.substring(0, parsedParams.length()-1);
+		// Put the rest of the params.
+		for (int i = 0; i < paramsArray.length; i++) {
+			paramsJA.put(paramsArray[i]);
+		}
 		
-		// Close off the params block.
-		parsedParams += "]";
-		
-		Log.d(TAG, parsedParams);
-		
+		// Finish it off.
+		String parsedParams = paramsJA.toString();
 		
 		// Set the timeout values on the request.
 		HttpParams httpParameters = new BasicHttpParams();
@@ -72,44 +76,22 @@ public class Client {
 		HttpConnectionParams.setConnectionTimeout(httpParameters, timeout); // Timeout for connection to be established.
 		HttpConnectionParams.setSoTimeout(httpParameters, timeout); // Timeout for data to arrive.
 		
-		Log.d(TAG, "Created HttpParamaters.");
-		
 		// Create a new HttpClient and add URL;
 	    HttpClient httpclient = new DefaultHttpClient(httpParameters);
-	    Log.d(TAG, "Created HTTPClient");
-	    
 	    HttpPost httppost = new HttpPost("https://" + SERVER + ".lacunaexpanse.com/" + module);
-	    Log.d(TAG, "Created httppost variable");
 
 	    try {
-	    	/*
-	    	String params = "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"method\":\"" + method + "\",\"params\":\"" + parsedParams + "\"}";													
-	        // Add the data to the POST body.
-	        ArrayList<NameValuePair> paramPairs = new ArrayList<NameValuePair>(4);
-	        paramPairs.add(new BasicNameValuePair("jsonrpc", "2.0"));
-	        paramPairs.add(new BasicNameValuePair("id",      "1"));
-	        paramPairs.add(new BasicNameValuePair("method",  method));
-	        paramPairs.add(new BasicNameValuePair("params",  parsedParams));
-	        */
-	    	JSONObject params = new JSONObject();
-	    	JsonParser.put(params, "jsonrpc", "2.0");
-	    	JsonParser.put(params, "id",      "1");
-	    	JsonParser.put(params, "method",  method);
-	    	JsonParser.put(params, "params",  parsedParams);
-	        httppost.setEntity(new ByteArrayEntity(params.toString().getBytes("UTF8")));
-	        
-	        String test = httppost.getEntity().toString();
-	        Log.d(TAG, test);
-	        
-	        Log.d(TAG, "Created parameters");
+	    	// Building the JSON String manually seems like the best way to do this.
+	    	String params = "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"method\":\"" + method + "\",\"params\":" + parsedParams + "}";
+	        httppost.setEntity(new ByteArrayEntity(params.getBytes("UTF8")));
 	        
 	        // Execute HTTP Post Request.
 	        HttpResponse serverResponse = httpclient.execute(httppost);
 	        
-	        Log.d(TAG, "Executed request");
-	        
 	        // Get the String response.
-	        BufferedReader in = new BufferedReader(new InputStreamReader(serverResponse.getEntity().getContent()));
+	        BufferedReader in = new BufferedReader(
+	        		new InputStreamReader(
+	        				serverResponse.getEntity().getContent()));
 			StringBuilder sb = new StringBuilder();
 
 			String line;
@@ -117,7 +99,6 @@ public class Client {
 				sb.append(line + "\n");
 			}
 			
-			Log.d(TAG, "Response: " + sb.toString());
 			JSONObject response = new JSONObject(sb.toString());
 			in.close();
 			
@@ -125,14 +106,21 @@ public class Client {
 			if (response.has("result")) {
 				// If the server doesn't return the result in JSONObject form, just return the
 				// whole thing.
-				if (method == "login") {
+				if (method == "logout") {
 					return response;
 				}
+				
 				JSONObject result   = JsonParser.getJO(response, "result");
 				
-				// Store the status in cache.
-				JSONObject status = JsonParser.getJO(result, "status");
-				STATUS = status;
+				// If we're calling get_status() directly, the result won't have a separate status
+				// block.
+				if (method == "get_status") {
+					STATUS = result;
+				}
+				else {
+					JSONObject status = JsonParser.getJO(result, "status");
+					STATUS = status;
+				}
 				
 				// Now we just return the result. Nothing fancy. :)
 				return result;
@@ -143,7 +131,6 @@ public class Client {
 				long code = JsonParser.getL(error, "code");
 				String message = JsonParser.getS(error, "message");
 				
-				Log.d("Lacuna Expanse - Debug", "Error " + code + ": " + message);
 				// Fall back to the login screen if the session expired.
 				if (code == 1006) {
 					// Print the error message to the screen. Inside the context, before it changes.
@@ -155,7 +142,6 @@ public class Client {
 				}
 				
 				// Print the error message to the screen.
-				Log.d(TAG, "Returning null");
 				Toast.makeText(CONTEXT, message, Toast.LENGTH_LONG).show();
 				return null;
 			}

@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class Login extends Activity {
@@ -92,11 +91,10 @@ public class Login extends Activity {
 						Client.login(empireName, empirePassword, SELECTED_SERVER, API_KEY);
 						
 						// Get the home planet id.
-						//JSONObject status   = Client.STATUS;
-						//JSONObject empire   = JsonParser.getJO(status, "empire");
-						//String homePlanetId = JsonParser.getS(empire, "home_planet_id");
-						// TODO remove debug lines.
-						/*
+						JSONObject status   = Client.STATUS;
+						JSONObject empire   = JsonParser.getJO(status, "empire");
+						String homePlanetId = JsonParser.getS(empire, "home_planet_id");
+						
 						final String SESSION_ID = Client.SESSION_ID;
 						if (SESSION_ID != null) {
 							Intent intent = new Intent(Login.this,PlanetResourceView.class);
@@ -105,7 +103,6 @@ public class Login extends Activity {
 							Login.this.startActivity(intent);
 							finish();
 						}
-						*/
 					}
 				}
 			}

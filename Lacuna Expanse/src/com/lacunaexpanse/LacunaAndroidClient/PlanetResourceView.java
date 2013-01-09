@@ -108,7 +108,7 @@ public class PlanetResourceView extends Activity {
 		Spinner selectPlanetSpinner = (Spinner) findViewById(R.id.selectPlanet);
 		
 		ArrayList<String> planetNames = new ArrayList<String>();
-		planetNames.add("AAAAAAAAAAAAAAAA"); // Make sure this one stays at the top as a placeholder for the "Select Planet" option.
+		planetNames.add("11111AAAAAaaaaa"); // Make sure this one stays at the top as a placeholder for the "Select Planet" option.
 		Iterator<?> iter = planets.keys();
 		
 		while(iter.hasNext()) {
@@ -118,9 +118,12 @@ public class PlanetResourceView extends Activity {
 		    JsonParser.put(reversedPlanets, value, key);
 		    planetNames.add(value);
 		}
+		
 		Collections.sort(planetNames);
+		
 		for (int i = 0; i < planetNames.size(); i++) {
-			if (planetNames.get(i) == "AAAAAAAAAAAAAAAA") {
+			if (planetNames.get(i) == "11111AAAAAaaaaa") {
+				adapter.add("Select Planet");
 			}
 			else {
 				adapter.add(planetNames.get(i));
