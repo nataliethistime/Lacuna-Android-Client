@@ -89,14 +89,14 @@ public class Login extends Activity {
 						// Initialize the Client class.
 						Client.setContext(Login.this);
 						Client.login(empireName, empirePassword, SELECTED_SERVER, API_KEY);
-						
-						// Get the home planet id.
 						JSONObject status   = Client.STATUS;
-						JSONObject empire   = JsonParser.getJO(status, "empire");
-						String homePlanetId = JsonParser.getS(empire, "home_planet_id");
 						
-						final String SESSION_ID = Client.SESSION_ID;
-						if (SESSION_ID != null) {
+						// Make sure that we don't run into a NullPointerException.
+						if (status != null) {
+							// Get the home planet id.
+							JSONObject empire   = JsonParser.getJO(status, "empire");
+							String homePlanetId = JsonParser.getS(empire, "home_planet_id");
+							
 							Intent intent = new Intent(Login.this,PlanetResourceView.class);
 							intent.putExtra("planetId", homePlanetId);
 

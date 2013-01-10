@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-class PlanetBuildingsView extends Activity {
+public class PlanetBuildingsView extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -16,18 +16,12 @@ class PlanetBuildingsView extends Activity {
         
         final Bundle EXTRAS = getIntent().getExtras();
         
-        String sessionId = null;
-        String selectedServer = null;
         String planetId = null;
         
         if (EXTRAS != null) {
-        	sessionId = EXTRAS.getString("sessionId");
-        	selectedServer = EXTRAS.getString("selectedServer");
         	planetId = EXTRAS.getString("planetId");
         }
         
-        final String SESSION_ID = sessionId;
-        final String SELECTED_SERVER = selectedServer;
         final String PLANET_ID = planetId;
         
         /*--------------------------*/
@@ -35,7 +29,7 @@ class PlanetBuildingsView extends Activity {
         
         
         
-        /*Dear followers,
+        /* Dear followers,
          * 
          * I am unable to continue with this class. My computer takes 20 minutes to compile 
          * the app when all the building assets are imported; much too long. So, I have to leave
@@ -336,10 +330,8 @@ class PlanetBuildingsView extends Activity {
         goBackButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				
-				Intent intent = new Intent(PlanetBuildingsView.this,PlanetResourceView.class);
-				intent.putExtra("sessionId",SESSION_ID);
-				intent.putExtra("selectedServer",SELECTED_SERVER);
-				intent.putExtra("planetId",PLANET_ID);
+				Intent intent = new Intent(PlanetBuildingsView.this, PlanetResourceView.class);
+				intent.putExtra("planetId", PLANET_ID);
 				
 				PlanetBuildingsView.this.startActivity(intent);
 				finish();

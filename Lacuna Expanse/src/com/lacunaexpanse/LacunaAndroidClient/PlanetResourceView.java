@@ -24,6 +24,8 @@ public class PlanetResourceView extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_planet_resource_view);
         
+        Client.setContext(PlanetResourceView.this);
+        
         String planetId = null;
         
         final Bundle EXTRAS = getIntent().getExtras(); 
@@ -57,8 +59,8 @@ public class PlanetResourceView extends Activity {
 		});
     }
     
-    public void refreshResources(final String PLANET_ID) {
-		JSONObject result = Client.send(true, new String[]{PLANET_ID}, "body", "get_status");
+    public void refreshResources(final String planetId) {
+		JSONObject result = Client.send(true, new String[]{planetId}, "body", "get_status");
 		JSONObject body   = JsonParser.getJO(result, "body");
 		
 		TextView planetNameOutput = (TextView) findViewById(R.id.planetName);
@@ -136,8 +138,8 @@ public class PlanetResourceView extends Activity {
 		
 		viewBuildingsButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Intent intent = new Intent(PlanetResourceView.this,PlanetBuildingsView.class);
-				intent.putExtra("planetId", PLANET_ID);
+				Intent intent = new Intent(PlanetResourceView.this, PlanetBuildingsView.class);
+				intent.putExtra("planetId", planetId);
 				
 				PlanetResourceView.this.startActivity(intent);
 				finish();

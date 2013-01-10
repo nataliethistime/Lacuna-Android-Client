@@ -45,11 +45,10 @@ public class Client {
 		JSONObject result = send(false, new String[]{EMPIRE_NAME, EMPIRE_PASS, API_KEY}, "empire", "login");
 		
 		if (result != null) {
-			Log.d("Lacuna Expanse - Debug", result.toString());
 			SESSION_ID = JsonParser.getS(result, "session_id");
-			
-			// Verify that all this works.
-			//Toast.makeText(CONTEXT, "Session ID: " + SESSION_ID, Toast.LENGTH_LONG).show();
+		}
+		else {
+			SESSION_ID = null;
 		}
 	}
 	
@@ -101,6 +100,9 @@ public class Client {
 			
 			JSONObject response = new JSONObject(sb.toString());
 			in.close();
+			
+			// Log the response.
+			Log.d("Lacuna Expanse - Debug", response.toString());
 			
 			// Now check if the server returned a result or an error.
 			if (response.has("result")) {
