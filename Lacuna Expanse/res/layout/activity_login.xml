@@ -1,56 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="left"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/tab"
         android:text="@string/login"
-        android:textSize="50dp"
+        android:textColor="#FFD800"
+        android:textSize="30dp"
         tools:context=".Login" />
 
-    <EditText
-        android:id="@+id/empireNameField"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:ems="10"
-        android:inputType="text"
-        android:singleLine="true"
-        android:hint="@string/empireName" />
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/lacuna_section" >
 
-    <EditText
-        android:id="@+id/passWordField"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:ems="10"
-        android:inputType="textPassword"
-        android:singleLine="true"
-        android:hint="@string/passWord" />
+        <EditText
+            android:id="@+id/empireNameField"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:ems="10"
+            android:hint="@string/empireName"
+            android:inputType="text"
+            android:singleLine="true" />
 
-    <Spinner
-        android:id="@+id/selectServer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/serverOptions" />
+        <EditText
+            android:id="@+id/passWordField"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/empireNameField"
+            android:layout_gravity="left"
+            android:ems="10"
+            android:hint="@string/passWord"
+            android:inputType="textPassword"
+            android:singleLine="true" />
 
-    <Button
-        android:id="@+id/loginButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:text="@string/login" />
+        <Spinner
+            android:id="@+id/selectServer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/passWordField"
+            android:entries="@array/serverOptions" />
+
+        <Button
+            android:id="@+id/loginButton"
+            style="@style/LacunaButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/selectServer"
+            android:layout_gravity="right"
+            android:text="@string/login" />
+
+        <TextView
+            android:id="@+id/versionInformation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/loginButton"
+            android:layout_gravity="center"
+            android:layout_margin="15dp"
+            android:text="The update reminder is currently unavailable.  I will work on a fix to it&apos;s problems soon. Watch this space."
+            android:textColor="#ffffff" />
     
-    <TextView
-        android:id="@+id/versionInformation"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_gravity="center" />
-       
+    </RelativeLayout>
+
 </LinearLayout>

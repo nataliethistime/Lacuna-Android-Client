@@ -7,8 +7,17 @@
     </style>
     
     <style name="Splash" parent="android:Theme">
-        <item name="android:windowBackground">@drawable/splash_screen</item>
         <item name="android:windowNoTitle">true</item>
+    </style>
+    
+    <style name="LacunaButton">
+        <item name="android:background">@drawable/lacuna_button</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">15dp</item>
+    </style>
+    
+    <style name="Section">
+        <item name="android:background">@drawable/lacuna_section</item>
     </style>
         
 </resources>
