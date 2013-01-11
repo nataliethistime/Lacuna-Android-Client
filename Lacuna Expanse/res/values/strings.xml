@@ -15,5 +15,6 @@
     <string name="empireName">Empire Name</string>
     <string name="passWord">Empire Password</string>
     <string name="goBack">Go Back</string>
+    <string name="title_activity_splash">Splash</string>
 
 </resources>
