@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class PlanetBuildingsView extends Activity {
 
@@ -23,6 +24,8 @@ public class PlanetBuildingsView extends Activity {
         }
         
         final String PLANET_ID = planetId;
+        
+        Toast.makeText(PlanetBuildingsView.this, "Feature not implemented yet.", Toast.LENGTH_LONG).show();
         
         /*--------------------------*/
         

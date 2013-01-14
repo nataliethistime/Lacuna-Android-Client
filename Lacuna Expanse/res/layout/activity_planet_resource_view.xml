@@ -4,74 +4,174 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
+
     <TextView
+        android:id="@+id/planetName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/tab"
+        android:text="Gasball Of Destruction!"
+        android:textColor="#FFD800"
+        android:textSize="25dp" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:gravity="center"
-        android:text="@string/resInfoTitle"
-        android:textSize="45dp" />
-    
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/planetName"
-        android:text="@string/blank"
-        android:textSize="25dp" />
-    
-    <TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/foodProductionInfo"
-        android:textSize="15dp"
-        android:text="@string/blank" />
-    
-    <TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/oreProductionInfo"
-        android:textSize="15dp"
-        android:text="@string/blank" />
-    
-    <TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/waterProductionInfo"
-        android:textSize="15dp"
-        android:text="@string/blank" />
-    
-    <TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/energyProductionInfo"
-        android:textSize="15dp"
-        android:text="@string/blank" />
-    
-    <TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/wasteProductionInfo"
-        android:textSize="15dp"
-        android:text="@string/blank" />
-    
-    <Spinner
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:id="@+id/selectPlanet" />
-    
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:id="@+id/viewPlanetButton" />
-    
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:id="@+id/logoutButton"
-        android:text="@string/logout" />
-    
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/lacuna_section" >
+        
+        <!-- The food section. -->
+        <ImageView
+            android:id="@+id/foodImage"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:contentDescription="@string/blank"
+            android:maxWidth="15dp"
+            android:src="@drawable/food" />
+            
+        <TextView
+            android:id="@+id/foodProductionInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/foodImage"
+            android:layout_alignTop="@id/foodImage"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/foodImage"
+            android:height="20dp"
+            android:maxHeight="20dp"
+            android:text="Test - 5555555"
+            android:textColor="#ffffff"
+            android:textSize="20dp" />
+        
+        <!-- The Ore section. -->
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_below="@id/foodImage"
+            android:contentDescription="@string/blank"
+            android:id="@+id/oreImage"
+            android:src="@drawable/ore"
+        />
+
+        <TextView
+            android:id="@+id/oreProductionInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/oreImage"
+            android:layout_alignTop="@id/oreImage"
+            android:layout_below="@id/foodProductionInfo"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/oreImage"
+            android:height="20dp"
+            android:maxHeight="20dp"
+            android:text="Test - 5555555"
+            android:textColor="#ffffff"
+            android:textSize="20dp" />
+
+        <!-- The Water section. -->
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_below="@id/oreImage"
+            android:contentDescription="@string/blank"
+            android:id="@+id/waterImage"
+            android:src="@drawable/water"
+        />
+        
+        <TextView
+            android:id="@+id/waterProductionInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/waterImage"
+            android:layout_alignTop="@id/waterImage"
+            android:layout_below="@id/oreImage"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/waterImage"
+            android:height="20dp"
+            android:maxHeight="20dp"
+            android:text="Test - 5555555"
+            android:textColor="#ffffff"
+            android:textSize="20dp" />
+
+        <!-- The Energy section. -->
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_below="@id/waterImage"
+            android:contentDescription="@string/blank"
+            android:id="@+id/energyImage"
+            android:src="@drawable/energy"
+        />
+        
+        <TextView
+            android:id="@+id/energyProductionInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/energyImage"
+            android:layout_alignTop="@id/energyImage"
+            android:layout_below="@id/waterProductionInfo"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/energyImage"
+            android:height="20dp"
+            android:maxHeight="20dp"
+            android:text="Test - 5555555"
+            android:textColor="#ffffff"
+            android:textSize="20dp" />
+
+        <!-- The Waste section. -->
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_below="@id/energyImage"
+            android:contentDescription="@string/blank"
+            android:id="@+id/wasteImage"
+            android:src="@drawable/waste"
+        />
+        
+        <TextView
+            android:id="@+id/wasteProductionInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/wasteImage"
+            android:layout_alignTop="@id/wasteImage"
+            android:layout_below="@id/energyProductionInfo"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/wasteImage"
+            android:height="20dp"
+            android:maxHeight="20dp"
+            android:text="Test - 5555555"
+            android:textColor="#ffffff"
+            android:textSize="20dp" />
+
+        <Spinner
+            android:id="@+id/selectPlanet"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wasteImage"
+            android:layout_gravity="center" />
+
+        <Button
+            android:id="@+id/viewPlanetButton"
+            style="@style/LacunaButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/selectPlanet"
+            android:layout_gravity="center" />
+
+        <Button
+            android:id="@+id/logoutButton"
+            style="@style/LacunaButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/viewPlanetButton"
+            android:layout_gravity="center"
+            android:text="@string/logout" />
+        
+    </RelativeLayout>
+
 </LinearLayout>

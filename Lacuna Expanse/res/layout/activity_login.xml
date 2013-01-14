@@ -14,8 +14,7 @@
         android:background="@drawable/tab"
         android:text="@string/login"
         android:textColor="#FFD800"
-        android:textSize="30dp"
-        tools:context=".Login" />
+        android:textSize="25dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -72,33 +72,33 @@ public class PlanetResourceView extends Activity {
 
 		// Parse and round the numbers.
 		String foodProduction   = Library.formatBigNumbers(JsonParser.getL(body, "food_hour"));
-		String foodStorage      = Library.formatBigNumbers(JsonParser.getL(body, "food_hour"));
+		String foodStorage      = Library.formatBigNumbers(JsonParser.getL(body, "food_capacity"));
 		String foodStored       = Library.formatBigNumbers(JsonParser.getL(body, "food_stored"));
 
 		String oreProduction    = Library.formatBigNumbers(JsonParser.getL(body, "ore_hour"));
-		String oreStorage       = Library.formatBigNumbers(JsonParser.getL(body, "ore_hour"));
+		String oreStorage       = Library.formatBigNumbers(JsonParser.getL(body, "ore_capacity"));
 		String oreStored        = Library.formatBigNumbers(JsonParser.getL(body, "ore_stored"));
 
 		String waterProduction  = Library.formatBigNumbers(JsonParser.getL(body, "water_hour"));
-		String waterStorage     = Library.formatBigNumbers(JsonParser.getL(body, "water_hour"));
+		String waterStorage     = Library.formatBigNumbers(JsonParser.getL(body, "water_capacity"));
 		String waterStored      = Library.formatBigNumbers(JsonParser.getL(body, "water_stored"));
 
 		String energyProduction = Library.formatBigNumbers(JsonParser.getL(body, "energy_hour"));
-		String energyStorage    = Library.formatBigNumbers(JsonParser.getL(body, "energy_hour"));
+		String energyStorage    = Library.formatBigNumbers(JsonParser.getL(body, "energy_capacity"));
 		String energyStored     = Library.formatBigNumbers(JsonParser.getL(body, "energy_stored"));
 
 		String wasteProduction  = Library.formatBigNumbers(JsonParser.getL(body, "waste_hour"));
-		String wasteStorage     = Library.formatBigNumbers(JsonParser.getL(body, "waste_hour"));
+		String wasteStorage     = Library.formatBigNumbers(JsonParser.getL(body, "waste_capacity"));
 		String wasteStored      = Library.formatBigNumbers(JsonParser.getL(body, "waste_stored"));
 
 		String planetName = JsonParser.getS(body, "name");
 		
 		planetNameOutput.setText(planetName);
-		foodInformationOutput.setText("Food: " + foodStored + "/" + foodStorage + " @ " + foodProduction + "/hr");
-		oreInformationOutput.setText("Ore: " + oreStored + "/" + oreStorage + " @ " + oreProduction + "/hr");
-		waterInformationOutput.setText("Water: " + waterStored + "/" + waterStorage + " @ " + waterProduction + "/hr");
-		energyInformationOutput.setText("Energy: " + energyStored + "/" + energyStorage + " @ " + energyProduction + "/hr");
-		wasteInformationOutput.setText("Waste: " + wasteStored + "/" + wasteStorage + " @ " + wasteProduction + "/hr");
+		foodInformationOutput.setText(foodStored + "/" + foodStorage + " @ " + foodProduction + "/hr");
+		oreInformationOutput.setText(oreStored + "/" + oreStorage + " @ " + oreProduction + "/hr");
+		waterInformationOutput.setText(waterStored + "/" + waterStorage + " @ " + waterProduction + "/hr");
+		energyInformationOutput.setText(energyStored + "/" + energyStorage + " @ " + energyProduction + "/hr");
+		wasteInformationOutput.setText(wasteStored + "/" + wasteStorage + " @ " + wasteProduction + "/hr");
 		
 		// Parse the JSON for getting the list of planets
 		JSONObject reversedPlanets = new JSONObject();
