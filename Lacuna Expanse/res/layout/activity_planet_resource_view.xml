@@ -13,7 +13,7 @@
         android:layout_marginLeft="25dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/tab"
-        android:text="Gasball Of Destruction!"
+        android:text="@string/blank"
         android:textColor="#FFD800"
         android:textSize="25dp" />
 
@@ -44,7 +44,7 @@
             android:layout_toRightOf="@id/foodImage"
             android:height="20dp"
             android:maxHeight="20dp"
-            android:text="Test - 5555555"
+            android:text="@string/blank"
             android:textColor="#ffffff"
             android:textSize="20dp" />
         
@@ -69,7 +69,7 @@
             android:layout_toRightOf="@id/oreImage"
             android:height="20dp"
             android:maxHeight="20dp"
-            android:text="Test - 5555555"
+            android:text="@string/blank"
             android:textColor="#ffffff"
             android:textSize="20dp" />
 
@@ -94,7 +94,7 @@
             android:layout_toRightOf="@id/waterImage"
             android:height="20dp"
             android:maxHeight="20dp"
-            android:text="Test - 5555555"
+            android:text="@string/blank"
             android:textColor="#ffffff"
             android:textSize="20dp" />
 
@@ -119,7 +119,7 @@
             android:layout_toRightOf="@id/energyImage"
             android:height="20dp"
             android:maxHeight="20dp"
-            android:text="Test - 5555555"
+            android:text="@string/blank"
             android:textColor="#ffffff"
             android:textSize="20dp" />
 
@@ -144,7 +144,7 @@
             android:layout_toRightOf="@id/wasteImage"
             android:height="20dp"
             android:maxHeight="20dp"
-            android:text="Test - 5555555"
+            android:text="@string/blank"
             android:textColor="#ffffff"
             android:textSize="20dp" />
 
