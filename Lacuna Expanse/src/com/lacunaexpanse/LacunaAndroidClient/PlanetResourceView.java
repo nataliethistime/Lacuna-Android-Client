@@ -27,9 +27,7 @@ public class PlanetResourceView extends Activity {
         Client.setContext(PlanetResourceView.this);
         
         String planetId = null;
-        
         final Bundle EXTRAS = getIntent().getExtras(); 
-        
         if (EXTRAS != null) {
         	planetId = EXTRAS.getString("planetId");
         }
@@ -42,19 +40,11 @@ public class PlanetResourceView extends Activity {
 		Button logoutButton = (Button) findViewById(R.id.logoutButton);
 		logoutButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				Client.logout();
 				
-				JSONObject request = Client.send(true, new String[]{}, "empire", "logout");
-				long result        = JsonParser.getL(request, "result");
-
-				if (result == 1) {
-					Intent intent = new Intent(PlanetResourceView.this,Login.class);
-					PlanetResourceView.this.startActivity(intent);
-					finish();
-				}
-				// I don't know if this needs to be here anymore.
-				else {
-					Toast.makeText(PlanetResourceView.this, "Something stupido has happened while the logout request was being made...", Toast.LENGTH_LONG).show();
-				}
+				Intent intent = new Intent(PlanetResourceView.this,Login.class);
+				PlanetResourceView.this.startActivity(intent);
+				finish();
 			}
 		});
     }
