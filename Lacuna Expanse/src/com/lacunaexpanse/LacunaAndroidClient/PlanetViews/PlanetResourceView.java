@@ -1,4 +1,4 @@
-package com.lacunaexpanse.LacunaAndroidClient;
+package com.lacunaexpanse.LacunaAndroidClient.PlanetViews;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,7 +6,14 @@ import java.util.Iterator;
 
 import org.json.JSONObject;
 
+import com.lacunaexpanse.LacunaAndroidClient.Login;
+import com.lacunaexpanse.LacunaAndroidClient.R;
 import com.lacunaexpanse.LacunaAndroidClient.Mail.Mail;
+import com.lacunaexpanse.LacunaAndroidClient.R.id;
+import com.lacunaexpanse.LacunaAndroidClient.R.layout;
+import com.lacunaexpanse.LacunaAndroidClient.lib.Client;
+import com.lacunaexpanse.LacunaAndroidClient.lib.JsonParser;
+import com.lacunaexpanse.LacunaAndroidClient.lib.Library;
 
 import android.app.Activity;
 import android.content.Intent;

@@ -21,9 +21,9 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-import com.lacunaexpanse.LacunaAndroidClient.Client;
-import com.lacunaexpanse.LacunaAndroidClient.JsonParser;
 import com.lacunaexpanse.LacunaAndroidClient.R;
+import com.lacunaexpanse.LacunaAndroidClient.lib.Client;
+import com.lacunaexpanse.LacunaAndroidClient.lib.JsonParser;
 
 public class Mail extends Activity {
 

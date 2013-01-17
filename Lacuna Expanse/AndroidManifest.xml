@@ -19,12 +19,12 @@
             android:theme="@style/AppTheme" >
         </activity>
         <activity
-            android:name=".PlanetResourceView"
+            android:name=".PlanetViews.PlanetResourceView"
             android:label="@string/title_activity_planet_view"
             android:theme="@style/AppTheme" >
         </activity>
         <activity
-            android:name=".PlanetBuildingsView"
+            android:name=".PlanetViews.PlanetBuildingsView"
             android:label="@string/title_activity_planet_buildings_view"
             android:theme="@style/AppTheme" >
         </activity>

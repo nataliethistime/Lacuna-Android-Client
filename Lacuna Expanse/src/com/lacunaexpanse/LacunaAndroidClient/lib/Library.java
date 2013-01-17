@@ -1,4 +1,4 @@
-package com.lacunaexpanse.LacunaAndroidClient;
+package com.lacunaexpanse.LacunaAndroidClient.lib;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

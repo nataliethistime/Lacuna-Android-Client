@@ -2,6 +2,10 @@ package com.lacunaexpanse.LacunaAndroidClient;
 
 import org.json.JSONObject;
 
+import com.lacunaexpanse.LacunaAndroidClient.PlanetViews.PlanetResourceView;
+import com.lacunaexpanse.LacunaAndroidClient.lib.Client;
+import com.lacunaexpanse.LacunaAndroidClient.lib.JsonParser;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

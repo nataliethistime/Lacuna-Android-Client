@@ -1,5 +1,9 @@
-package com.lacunaexpanse.LacunaAndroidClient;
+package com.lacunaexpanse.LacunaAndroidClient.PlanetViews;
 
+
+import com.lacunaexpanse.LacunaAndroidClient.R;
+import com.lacunaexpanse.LacunaAndroidClient.R.id;
+import com.lacunaexpanse.LacunaAndroidClient.R.layout;
 
 import android.app.Activity;
 import android.content.Intent;

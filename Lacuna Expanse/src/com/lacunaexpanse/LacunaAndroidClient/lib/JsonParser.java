@@ -1,4 +1,4 @@
-package com.lacunaexpanse.LacunaAndroidClient;
+package com.lacunaexpanse.LacunaAndroidClient.lib;
 
 import org.json.JSONArray;
 import org.json.JSONException;

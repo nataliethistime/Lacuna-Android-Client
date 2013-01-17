@@ -1,4 +1,4 @@
-package com.lacunaexpanse.LacunaAndroidClient;
+package com.lacunaexpanse.LacunaAndroidClient.lib;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,6 +17,8 @@ import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.lacunaexpanse.LacunaAndroidClient.Login;
 
 import android.content.Context;
 import android.content.Intent;
