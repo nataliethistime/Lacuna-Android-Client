@@ -6,6 +6,8 @@ import java.util.Iterator;
 
 import org.json.JSONObject;
 
+import com.lacunaexpanse.LacunaAndroidClient.Mail.Mail;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -61,25 +63,40 @@ public class PlanetResourceView extends Activity {
 		TextView wasteInformationOutput = (TextView) findViewById(R.id.wasteProductionInfo);
 
 		// Parse and round the numbers.
-		String foodProduction   = Library.formatBigNumbers(JsonParser.getL(body, "food_hour"));
-		String foodStorage      = Library.formatBigNumbers(JsonParser.getL(body, "food_capacity"));
-		String foodStored       = Library.formatBigNumbers(JsonParser.getL(body, "food_stored"));
+		String foodProduction   = Library.formatBigNumbers(
+				JsonParser.getL(body, "food_hour"));
+		String foodStorage      = Library.formatBigNumbers(
+				JsonParser.getL(body, "food_capacity"));
+		String foodStored       = Library.formatBigNumbers(
+				JsonParser.getL(body, "food_stored"));
 
-		String oreProduction    = Library.formatBigNumbers(JsonParser.getL(body, "ore_hour"));
-		String oreStorage       = Library.formatBigNumbers(JsonParser.getL(body, "ore_capacity"));
-		String oreStored        = Library.formatBigNumbers(JsonParser.getL(body, "ore_stored"));
+		String oreProduction    = Library.formatBigNumbers
+				(JsonParser.getL(body, "ore_hour"));
+		String oreStorage       = Library.formatBigNumbers(
+				JsonParser.getL(body, "ore_capacity"));
+		String oreStored        = Library.formatBigNumbers(
+				JsonParser.getL(body, "ore_stored"));
 
-		String waterProduction  = Library.formatBigNumbers(JsonParser.getL(body, "water_hour"));
-		String waterStorage     = Library.formatBigNumbers(JsonParser.getL(body, "water_capacity"));
-		String waterStored      = Library.formatBigNumbers(JsonParser.getL(body, "water_stored"));
+		String waterProduction  = Library.formatBigNumbers(
+				JsonParser.getL(body, "water_hour"));
+		String waterStorage     = Library.formatBigNumbers(
+				JsonParser.getL(body, "water_capacity"));
+		String waterStored      = Library.formatBigNumbers(
+				JsonParser.getL(body, "water_stored"));
 
-		String energyProduction = Library.formatBigNumbers(JsonParser.getL(body, "energy_hour"));
-		String energyStorage    = Library.formatBigNumbers(JsonParser.getL(body, "energy_capacity"));
-		String energyStored     = Library.formatBigNumbers(JsonParser.getL(body, "energy_stored"));
+		String energyProduction = Library.formatBigNumbers(
+				JsonParser.getL(body, "energy_hour"));
+		String energyStorage    = Library.formatBigNumbers(
+				JsonParser.getL(body, "energy_capacity"));
+		String energyStored     = Library.formatBigNumbers(
+				JsonParser.getL(body, "energy_stored"));
 
-		String wasteProduction  = Library.formatBigNumbers(JsonParser.getL(body, "waste_hour"));
-		String wasteStorage     = Library.formatBigNumbers(JsonParser.getL(body, "waste_capacity"));
-		String wasteStored      = Library.formatBigNumbers(JsonParser.getL(body, "waste_stored"));
+		String wasteProduction  = Library.formatBigNumbers(
+				JsonParser.getL(body, "waste_hour"));
+		String wasteStorage     = Library.formatBigNumbers(
+				JsonParser.getL(body, "waste_capacity"));
+		String wasteStored      = Library.formatBigNumbers(
+				JsonParser.getL(body, "waste_stored"));
 
 		String planetName = JsonParser.getS(body, "name");
 		
@@ -95,12 +112,12 @@ public class PlanetResourceView extends Activity {
 		JSONObject empire          = JsonParser.getJO(result, "empire");
 		JSONObject planets         = JsonParser.getJO(empire, "planets");
 		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		Spinner selectPlanetSpinner = (Spinner) findViewById(R.id.selectPlanet);
 		
 		ArrayList<String> planetNames = new ArrayList<String>();
-		planetNames.add("11111AAAAAaaaaa"); // Make sure this one stays at the top as a placeholder for the "Select Planet" option.
 		Iterator<?> iter = planets.keys();
 		
 		while(iter.hasNext()) {
@@ -112,14 +129,10 @@ public class PlanetResourceView extends Activity {
 		}
 		
 		Collections.sort(planetNames);
+		adapter.add("Select Planet");
 		
 		for (int i = 0; i < planetNames.size(); i++) {
-			if (planetNames.get(i) == "11111AAAAAaaaaa") {
-				adapter.add("Select Planet");
-			}
-			else {
-				adapter.add(planetNames.get(i));
-			}
+			adapter.add(planetNames.get(i));
 		}
 		selectPlanetSpinner.setAdapter(adapter);
 		
@@ -133,6 +146,15 @@ public class PlanetResourceView extends Activity {
 				
 				PlanetResourceView.this.startActivity(intent);
 				finish();
+			}
+		});
+		
+		Button mailButton = (Button) findViewById(R.id.mailButton);
+		mailButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(PlanetResourceView.this, Mail.class);
+				
+				PlanetResourceView.this.startActivity(intent);
 			}
 		});
 		
@@ -153,7 +175,9 @@ public class PlanetResourceView extends Activity {
 					// I don't know weather this'll actually ever get called;
 					// It's just here as a precaution.
 					if (selectedPlanetName == "Select Planet") {
-						Toast.makeText(PlanetResourceView.this, "Please actually select a planet.", Toast.LENGTH_LONG).show();
+						Toast.makeText(PlanetResourceView.this,
+								"Please actually select a planet.",
+								Toast.LENGTH_LONG).show();
 					}
 					else {
 						String selectedId = JsonParser.getS(REVERSED_PLANETS, selectedPlanetName);

@@ -162,15 +162,44 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/selectPlanet"
             android:layout_gravity="center" />
+        
+    </RelativeLayout>
+    
+    <TextView
+        android:id="@+id/empireHeading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/tab"
+        android:text="@string/empire"
+        android:textColor="#FFD800"
+        android:textSize="25dp" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/lacuna_section" >
+        
         <Button
             android:id="@+id/logoutButton"
             style="@style/LacunaButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/viewPlanetButton"
             android:layout_gravity="center"
             android:text="@string/logout" />
+        <Button
+            android:id="@+id/mailButton"
+            style="@style/LacunaButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/logoutButton"
+            android:layout_gravity="center"
+            android:text="@string/mail" />
         
     </RelativeLayout>
 

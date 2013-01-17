@@ -36,6 +36,18 @@ public class JsonParser {
 		return result;
 	}
 	
+	public static JSONObject getJA(JSONArray jArray, int pos) {
+		JSONObject result = null;
+		try {
+			result = jArray.getJSONObject(pos);
+		}
+		catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
 	public static String getS(JSONObject jObject, String name) {
 		String result = "";
 		try {

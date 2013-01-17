@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReletiveLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="left|center"
+    android:paddingBottom="5dp"
+    android:paddingLeft="5dp"
+    android:paddingTop="5dp" >
+
+    <ImageView
+        android:id="@+id/mailStatusImage"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_marginRight="6dip"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/food" />
+
+    <TextView
+        android:id="@+id/mailFrom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/mailSubject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:textColor="#0099CC" />
+
+</ReletiveLayout>
