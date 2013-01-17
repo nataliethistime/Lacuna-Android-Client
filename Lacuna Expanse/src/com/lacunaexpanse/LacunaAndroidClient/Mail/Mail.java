@@ -2,6 +2,7 @@ package com.lacunaexpanse.LacunaAndroidClient.Mail;
 
 // TODO Create refreshMail() method.
 // TODO TEST!!
+// TODO implement the populating of the page num & tag Spinners.
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,8 +18,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.lacunaexpanse.LacunaAndroidClient.R;
@@ -26,15 +29,47 @@ import com.lacunaexpanse.LacunaAndroidClient.lib.Client;
 import com.lacunaexpanse.LacunaAndroidClient.lib.JsonParser;
 
 public class Mail extends Activity {
+	// So that there's a central "Currently selected page number and tag"
+	private static String pageNum   = "";
+	private static String filterTag = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mail);
         
-        // This seems like the simplest way to build the hash that the server requires.
+        // Populate the tags Spinner.
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		Spinner tagSelector = (Spinner) findViewById(R.id.selectPlanet);
+		
+		// TODO add all the tags.
+		adapter.add("");
+		
+		
+		tagSelector.setAdapter(adapter);
+        
+        
+        Spinner pageNumSelector = (Spinner) findViewById(R.id.mailPage);
+        pageNumSelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			public void onItemSelected(AdapterView<?> parent,View view,int pos,long id) {
+				int num           = pos+1;
+				pageNum = "" + num; // Need to specify ThisClass.this.variable otherwise it "invisible."
+				
+				refreshMail();
+			}
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// Nothing! Amazing, eh?
+			}
+        });
+    }
+    
+    public void refreshMail() {
+    	// This seems like the simplest way to build the hash that the server requires.
         JSONArray hashOptions = new JSONArray();
-        hashOptions.put("1");
+        hashOptions.put(pageNum);
+        hashOptions.put(filterTag);
         
         Client.setContext(Mail.this);
         JSONObject result = Client.send(true, new String[]{hashOptions.toString()}, "inbox", "view_inbox");

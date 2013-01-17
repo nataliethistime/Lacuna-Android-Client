@@ -2,8 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:theme="@style/AppTheme" >
+    tools:context=".ViewMail" >
 
     <TextView
         android:id="@+id/mailHeading"
@@ -24,33 +23,13 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/lacuna_section" >
-
-        <Spinner
-            android:id="@+id/mailPage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerHorizontal="false" >
-
-        </Spinner>
-        
-        <Spinner
-            android:id="@+id/mailFilter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerHorizontal="false"
-            android:layout_centerVertical="false"
-            android:layout_toRightOf="@id/mailPage" >
-
-        </Spinner>
-
-        <ListView
-            android:id="@+id/mails"
+    
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/mailPage" >
-        </ListView>
+            android:id="@+id/messageBody"
+            android:textColor="#FFD800" >
+        </TextView>
         
     </RelativeLayout>
 

@@ -148,6 +148,8 @@ public class Client {
 				}
 				
 				JSONObject response = new JSONObject(sb.toString());
+				// \n to make it look pretty. :P
+				Log.d("Lacuna Expanse - Debug", "Got server response:\n" + response.toString());
 				in.close();
 				
 				// Now check if the server returned a result or an error.
