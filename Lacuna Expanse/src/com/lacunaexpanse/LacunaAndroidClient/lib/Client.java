@@ -73,7 +73,7 @@ public class Client {
 		}
 	}
 	
-	public static JSONObject send(boolean includeSessionId, String[] paramsArray, String module, String method) {
+	public static JSONObject send(boolean includeSessionId, Object[] paramsArray, String module, String method) {
 		
 		JSONArray paramsJA = new JSONArray();
 		
@@ -89,7 +89,38 @@ public class Client {
 		
 		// Finish it off.
 		String parsedParams = paramsJA.toString();
+		
+		// If the item is a hash, handle the leading and ending quotes that screw the server up.
+		// This could screw up in some circumstances. But, for now, it works. :)
+		// btw, in Perl is it *SO MUCH* easier to do this...
+		if (method == "view_inbox") {
+			parsedParams = parsedParams.replaceAll("\\\"\\{", "\\{");
+			parsedParams = parsedParams.replaceAll("\\}\\\"", "\\}");
+		}
+		
+		// Finally, put it all together. This is ugly, but it works. :)
 		String params = "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"method\":\"" + method + "\",\"params\":" + parsedParams + "}";
+		
+		JSONObject result = null;
+		try {
+			AsyncSend asyncSend = new AsyncSend();
+			result   = asyncSend.execute(params, module, method).get();
+		}
+		catch (InterruptedException e) {
+			Toast.makeText(CONTEXT, "Connection to " + SERVER  + " failed.", Toast.LENGTH_LONG).show();
+			e.printStackTrace();
+		}
+		catch (ExecutionException e) {
+			Toast.makeText(CONTEXT, "Connection to " + SERVER  + " failed.", Toast.LENGTH_LONG).show();
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	// This method allows fully customized building of the params. As used in 
+	// com.lacunaexpanse.LacunaAndroidClient.Mail.Mail
+	public static JSONObject sendManually(String module, String method, String params) {
 		
 		JSONObject result = null;
 		try {
@@ -132,6 +163,7 @@ public class Client {
 		    	// Building the JSON String manually seems like the best way to do this.
 		    	
 		        httppost.setEntity(new ByteArrayEntity(args[0].getBytes("UTF8")));
+		        Log.d("Lacuna Expanse - Debug", "Sending to server:\n" + args[0]);
 		        
 		        // Execute HTTP Post Request.
 		        HttpResponse serverResponse = httpclient.execute(httppost);
@@ -162,14 +194,14 @@ public class Client {
 					
 					JSONObject result = JsonParser.getJO(response, "result");
 					
-					// If we're calling get_status() directly, the result won't have a separate status
-					// block.
-					if (args[1] == "get_status") {
-						STATUS = result;
-					}
-					else {
+					// If we're calling get_status() directly, the result won't have a 
+					// separate status block.
+					if (result.has("status")) {
 						JSONObject status = JsonParser.getJO(result, "status");
 						STATUS = status;
+					}
+					else {
+						STATUS = result;
 					}
 					
 					// Now we just return the result. Nothing fancy. :)

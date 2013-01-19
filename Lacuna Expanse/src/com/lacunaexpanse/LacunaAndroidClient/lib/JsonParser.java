@@ -36,7 +36,7 @@ public class JsonParser {
 		return result;
 	}
 	
-	public static JSONObject getJA(JSONArray jArray, int pos) {
+	public static JSONObject getJO(JSONArray jArray, int pos) {
 		JSONObject result = null;
 		try {
 			result = jArray.getJSONObject(pos);
