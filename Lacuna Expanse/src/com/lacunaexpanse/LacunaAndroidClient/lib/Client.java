@@ -90,13 +90,34 @@ public class Client {
 		// Finish it off.
 		String parsedParams = paramsJA.toString();
 		
-		// If the item is a hash, handle the leading and ending quotes that screw the server up.
+		// If on of the items is a hash, handle the leading and ending quotes that 
+		// screw the server up.
 		// This could screw up in some circumstances. But, for now, it works. :)
 		// btw, in Perl is it *SO MUCH* easier to do this...
+		/*
 		if (method == "view_inbox") {
+			// Fix the Curly Braces.
 			parsedParams = parsedParams.replaceAll("\\\"\\{", "\\{");
 			parsedParams = parsedParams.replaceAll("\\}\\\"", "\\}");
+			
+			/*
+			 * This is a Java Hash:
+			 * {
+			 * 		"this"="that",
+			 * 		"foo"="bar"
+			 * }
+			 * 
+			 * This is a Perl hash:
+			 * {
+			 * 		"this"=>"that",
+			 * 		"foo"=>"bar"
+			 * }
+			 * 
+			 * So, onto fixing!
+			 *
+			parsedParams = parsedParams.replaceAll("=", " => "); // I think it needs spaces.
 		}
+	*/
 		
 		// Finally, put it all together. This is ugly, but it works. :)
 		String params = "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"method\":\"" + method + "\",\"params\":" + parsedParams + "}";

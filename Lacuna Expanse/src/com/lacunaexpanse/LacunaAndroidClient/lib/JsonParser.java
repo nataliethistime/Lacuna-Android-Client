@@ -72,7 +72,7 @@ public class JsonParser {
 		return result;
 	}
 	
-	public static void put(JSONObject jObject, String name, String value) {
+	public static void put(JSONObject jObject, String name, Object value) { // value is an Object to accept Strings or ints.
 		try {
 			jObject.put(name, value);
 		}
