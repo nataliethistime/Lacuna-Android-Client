@@ -46,7 +46,7 @@ public class Client {
 		SERVER      = server;
 		API_KEY     = apiKey;
 		
-		JSONObject result = send(false, new String[]{EMPIRE_NAME, EMPIRE_PASS, API_KEY}, "empire", "login");
+		JSONObject result = send(new String[]{EMPIRE_NAME, EMPIRE_PASS, API_KEY}, "/empire", "login");
 		
 		if (result != null) {
 			SESSION_ID = JsonParser.getS(result, "session_id");
@@ -57,7 +57,7 @@ public class Client {
 	}
 	
 	public static void logout() {
-		JSONObject request = send(true, new String[]{}, "empire", "logout");
+		JSONObject request = send(new String[]{}, "/empire", "logout");
 		
 		if (request != null) {
 			long result = JsonParser.getL(request, "result");
@@ -73,12 +73,12 @@ public class Client {
 		}
 	}
 	
-	public static JSONObject send(boolean includeSessionId, Object[] paramsArray, String module, String method) {
+	public static JSONObject send(Object[] paramsArray, String moduleUrl, String method) {
 		
 		JSONArray paramsJA = new JSONArray();
 		
 		// If needed, add the session Id.
-		if (includeSessionId == true) {
+		if (method != "login" && moduleUrl != "/empire") {
 			paramsJA.put(SESSION_ID);
 		}
 		
@@ -90,63 +90,13 @@ public class Client {
 		// Finish it off.
 		String parsedParams = paramsJA.toString();
 		
-		// If on of the items is a hash, handle the leading and ending quotes that 
-		// screw the server up.
-		// This could screw up in some circumstances. But, for now, it works. :)
-		// btw, in Perl is it *SO MUCH* easier to do this...
-		/*
-		if (method == "view_inbox") {
-			// Fix the Curly Braces.
-			parsedParams = parsedParams.replaceAll("\\\"\\{", "\\{");
-			parsedParams = parsedParams.replaceAll("\\}\\\"", "\\}");
-			
-			/*
-			 * This is a Java Hash:
-			 * {
-			 * 		"this"="that",
-			 * 		"foo"="bar"
-			 * }
-			 * 
-			 * This is a Perl hash:
-			 * {
-			 * 		"this"=>"that",
-			 * 		"foo"=>"bar"
-			 * }
-			 * 
-			 * So, onto fixing!
-			 *
-			parsedParams = parsedParams.replaceAll("=", " => "); // I think it needs spaces.
-		}
-	*/
-		
 		// Finally, put it all together. This is ugly, but it works. :)
 		String params = "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"method\":\"" + method + "\",\"params\":" + parsedParams + "}";
 		
 		JSONObject result = null;
 		try {
 			AsyncSend asyncSend = new AsyncSend();
-			result   = asyncSend.execute(params, module, method).get();
-		}
-		catch (InterruptedException e) {
-			Toast.makeText(CONTEXT, "Connection to " + SERVER  + " failed.", Toast.LENGTH_LONG).show();
-			e.printStackTrace();
-		}
-		catch (ExecutionException e) {
-			Toast.makeText(CONTEXT, "Connection to " + SERVER  + " failed.", Toast.LENGTH_LONG).show();
-			e.printStackTrace();
-		}
-		
-		return result;
-	}
-	
-	// This method allows fully customized building of the params. As used in 
-	// com.lacunaexpanse.LacunaAndroidClient.Mail.Mail
-	public static JSONObject sendManually(String module, String method, String params) {
-		
-		JSONObject result = null;
-		try {
-			AsyncSend asyncSend = new AsyncSend();
-			result   = asyncSend.execute(params, module, method).get();
+			result   = asyncSend.execute(params, moduleUrl, method).get();
 		}
 		catch (InterruptedException e) {
 			Toast.makeText(CONTEXT, "Connection to " + SERVER  + " failed.", Toast.LENGTH_LONG).show();
@@ -178,7 +128,7 @@ public class Client {
 			
 			// Create a new HttpClient and add URL;
 		    HttpClient httpclient = new DefaultHttpClient(httpParameters);
-		    HttpPost httppost = new HttpPost("https://" + SERVER + ".lacunaexpanse.com/" + args[1]);
+		    HttpPost httppost = new HttpPost("https://" + SERVER + ".lacunaexpanse.com" + args[1]);
 
 		    try {
 		    	// Building the JSON String manually seems like the best way to do this.
@@ -282,13 +232,6 @@ public class Client {
 			if (params[0] == "0") {
 				Log.d(TAG, params[1]);
 				Toast.makeText(CONTEXT, params[1], Toast.LENGTH_LONG).show();
-			}
-			// Show the loading dialog.
-			else if (params[0] == "1") {
-				// TODO Implement the LoadingDialog.
-			}
-			else if (params[0] == "2") {
-				// TODO Implement the LoadingDialog.
 			}
 		}
 	}

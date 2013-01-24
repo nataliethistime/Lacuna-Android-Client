@@ -24,13 +24,20 @@ public class ViewMail extends Activity {
         }
         
         Client.setContext(ViewMail.this);
-        JSONObject result = Client.send(true, new String[]{mailId}, "inbox", "read_message");
+        JSONObject result = Client.send(new String[]{mailId}, "/inbox", "read_message");
         
         if (result != null) {
         	JSONObject message = JsonParser.getJO(result, "message");
+        	String headingText = JsonParser.getS(message, "from");
         	String messageText = JsonParser.getS(message, "body");
         	
+        	TextView mailHeading = (TextView) findViewById(R.id.mailHeading);
         	TextView messageBody = (TextView) findViewById(R.id.messageBody);
+        	
+        	// Remove some easy stuff that I find to be annoying.
+        	messageText = messageText.replaceAll("\\*", "");
+        	
+        	mailHeading.setText(headingText);
         	messageBody.setText(messageText);
         } 
     }

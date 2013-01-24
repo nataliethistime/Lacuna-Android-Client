@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -112,7 +113,7 @@ public class Mail extends Activity {
     	if (filterTag != "") JsonParser.put(hashOptions, "tags", filterTag);
     	
         Client.setContext(Mail.this);
-        JSONObject result = Client.send(true, new Object[]{hashOptions}, "inbox", "view_inbox");
+        JSONObject result = Client.send(new Object[]{hashOptions}, "/inbox", "view_inbox");
         
         if (result != null) {
         	JSONArray messages = JsonParser.getJA(result, "messages");
@@ -151,24 +152,21 @@ public class Mail extends Activity {
             if (hasMail == true) {
             	final Object[] MAIL_IDS = mailIds.toArray();
             
-            	spinnerReset = System.currentTimeMillis();
-            	mails.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            		public void onItemSelected(AdapterView<?> a, View v, int pos, long id) { 
-                		if (System.currentTimeMillis() - spinnerReset < 1000) {
+            	//spinnerReset = System.currentTimeMillis();
+            	mails.setOnItemClickListener(new OnItemClickListener() {
+            		public void onItemClick(AdapterView<?> a, View v, int pos, long id) { 
+                		//if (System.currentTimeMillis() - spinnerReset < 1000) {
     						//Nothing!
-    					}
-            			else if (System.currentTimeMillis() - spinnerReset > 1000) {
+    					//}
+            			//else if (System.currentTimeMillis() - spinnerReset > 1000) {
             				String mailId = MAIL_IDS[pos].toString();
                     	
                     		Intent intent = new Intent(Mail.this, ViewMail.class);
                     		intent.putExtra("mailId", mailId);
                     	
                     		Mail.this.startActivity(intent);
-            			}
+            			//}
                 	}
-					public void onNothingSelected(AdapterView<?> arg0) {
-						// Nothing! Amazing, eh?
-					}
             	});
             
             	// Populate the pages Spinner.

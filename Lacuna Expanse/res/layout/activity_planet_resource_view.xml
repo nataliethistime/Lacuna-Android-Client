@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/waterImage"
             android:layout_alignTop="@id/waterImage"
-            android:layout_below="@id/oreImage"
+            android:layout_below="@id/oreProductionInfo"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@id/waterImage"
             android:height="20dp"

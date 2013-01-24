@@ -1,0 +1,449 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:context=".PlanetViews.Buildings.BuildingsWrapper" >
+
+        <TextView
+            android:id="@+id/currentProductionHeading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/tab"
+            android:text="Current Production"
+            android:textColor="#FFD800"
+            android:textSize="25dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/lacuna_section" >
+
+            <!-- The food section. -->
+
+            <ImageView
+                android:id="@+id/foodImage"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:contentDescription="@string/blank"
+                android:maxWidth="15dp"
+                android:src="@drawable/food" />
+
+            <TextView
+                android:id="@+id/foodHourCurrent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/foodImage"
+                android:layout_alignTop="@id/foodImage"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/foodImage"
+                android:height="20dp"
+                android:maxHeight="20dp"
+                android:text="@string/blank"
+                android:textColor="#ffffff"
+                android:textSize="20dp" />
+
+            <!-- The Ore section. -->
+
+            <ImageView
+                android:id="@+id/oreImage"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_below="@id/foodImage"
+                android:contentDescription="@string/blank"
+                android:src="@drawable/ore" />
+
+            <TextView
+                android:id="@+id/oreHourCurrent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/oreImage"
+                android:layout_alignTop="@id/oreImage"
+                android:layout_below="@id/foodHourCurrent"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/oreImage"
+                android:height="20dp"
+                android:maxHeight="20dp"
+                android:text="@string/blank"
+                android:textColor="#ffffff"
+                android:textSize="20dp" />
+
+            <!-- The Water section. -->
+
+            <ImageView
+                android:id="@+id/waterImage"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_below="@id/oreImage"
+                android:contentDescription="@string/blank"
+                android:src="@drawable/water" />
+
+            <TextView
+                android:id="@+id/waterHourCurrent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/waterImage"
+                android:layout_alignTop="@id/waterImage"
+                android:layout_below="@id/oreHourCurrent"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/waterImage"
+                android:height="20dp"
+                android:maxHeight="20dp"
+                android:text="@string/blank"
+                android:textColor="#ffffff"
+                android:textSize="20dp" />
+
+            <!-- The Energy section. -->
+
+            <ImageView
+                android:id="@+id/energyImage"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_below="@id/waterImage"
+                android:contentDescription="@string/blank"
+                android:src="@drawable/energy" />
+
+            <TextView
+                android:id="@+id/energyHourCurrent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/energyImage"
+                android:layout_alignTop="@id/energyImage"
+                android:layout_below="@id/waterHourCurrent"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/energyImage"
+                android:height="20dp"
+                android:maxHeight="20dp"
+                android:text="@string/blank"
+                android:textColor="#ffffff"
+                android:textSize="20dp" />
+
+            <!-- The Waste section. -->
+
+            <ImageView
+                android:id="@+id/wasteImage"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_below="@id/energyImage"
+                android:contentDescription="@string/blank"
+                android:src="@drawable/waste" />
+
+            <TextView
+                android:id="@+id/wasteHourCurrent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/wasteImage"
+                android:layout_alignTop="@id/wasteImage"
+                android:layout_below="@id/energyHourCurrent"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/wasteImage"
+                android:height="20dp"
+                android:maxHeight="20dp"
+                android:text="@string/blank"
+                android:textColor="#ffffff"
+                android:textSize="20dp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/upgradeProductionHeading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/tab"
+            android:text="Upgrade Production"
+            android:textColor="#FFD800"
+            android:textSize="25dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/lacuna_section" >
+
+            <!-- The food section. -->
+
+            <ImageView
+                android:id="@+id/foodImage1"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:contentDescription="@string/blank"
+                android:maxWidth="15dp"
+                android:src="@drawable/food" />
+
+            <TextView
+                android:id="@+id/foodHourUpgrade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/foodImage1"
+                android:layout_alignTop="@id/foodImage1"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/foodImage1"
+                android:height="20dp"
+                android:maxHeight="20dp"
+                android:text="@string/blank"
+                android:textColor="#ffffff"
+                android:textSize="20dp" />
+
+            <!-- The Ore section. -->
+
+            <ImageView
+                android:id="@+id/oreImage1"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_below="@id/foodImage1"
+                android:contentDescription="@string/blank"
+                android:src="@drawable/ore" />
+
+            <TextView
+                android:id="@+id/oreHourUpgrade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/oreImage1"
+                android:layout_alignTop="@id/oreImage1"
+                android:layout_below="@id/foodHourUpgrade"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/oreImage1"
+                android:height="20dp"
+                android:maxHeight="20dp"
+                android:text="@string/blank"
+                android:textColor="#ffffff"
+                android:textSize="20dp" />
+
+            <!-- The Water section. -->
+
+            <ImageView
+                android:id="@+id/waterImage1"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_below="@id/oreImage1"
+                android:contentDescription="@string/blank"
+                android:src="@drawable/water" />
+
+            <TextView
+                android:id="@+id/waterHourUpgrade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/waterImage1"
+                android:layout_alignTop="@id/waterImage1"
+                android:layout_below="@id/oreHourUpgrade"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/waterImage1"
+                android:height="20dp"
+                android:maxHeight="20dp"
+                android:text="@string/blank"
+                android:textColor="#ffffff"
+                android:textSize="20dp" />
+
+            <!-- The Energy section. -->
+
+            <ImageView
+                android:id="@+id/energyImage1"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_below="@id/waterImage1"
+                android:contentDescription="@string/blank"
+                android:src="@drawable/energy" />
+
+            <TextView
+                android:id="@+id/energyHourUpgrade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/energyImage1"
+                android:layout_alignTop="@id/energyImage1"
+                android:layout_below="@id/waterHourUpgrade"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/energyImage1"
+                android:height="20dp"
+                android:maxHeight="20dp"
+                android:text="@string/blank"
+                android:textColor="#ffffff"
+                android:textSize="20dp" />
+
+            <!-- The Waste section. -->
+
+            <ImageView
+                android:id="@+id/wasteImage1"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_below="@id/energyImage1"
+                android:contentDescription="@string/blank"
+                android:src="@drawable/waste" />
+
+            <TextView
+                android:id="@+id/wasteHourUpgrade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/wasteImage1"
+                android:layout_alignTop="@id/wasteImage1"
+                android:layout_below="@id/energyHourUpgrade"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/wasteImage1"
+                android:height="20dp"
+                android:maxHeight="20dp"
+                android:text="@string/blank"
+                android:textColor="#ffffff"
+                android:textSize="20dp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/upgradeCostHeading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/tab"
+            android:text="Upgrade Cost"
+            android:textColor="#FFD800"
+            android:textSize="25dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/lacuna_section" >
+
+            <!-- The food section. -->
+
+            <ImageView
+                android:id="@+id/foodImage2"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:contentDescription="@string/blank"
+                android:maxWidth="15dp"
+                android:src="@drawable/food" />
+
+            <TextView
+                android:id="@+id/foodHourCost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/foodImage2"
+                android:layout_alignTop="@id/foodImage2"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/foodImage2"
+                android:height="20dp"
+                android:maxHeight="20dp"
+                android:text="@string/blank"
+                android:textColor="#ffffff"
+                android:textSize="20dp" />
+
+            <!-- The Ore section. -->
+
+            <ImageView
+                android:id="@+id/oreImage2"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_below="@id/foodImage2"
+                android:contentDescription="@string/blank"
+                android:src="@drawable/ore" />
+
+            <TextView
+                android:id="@+id/oreHourCost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/oreImage2"
+                android:layout_alignTop="@id/oreImage2"
+                android:layout_below="@id/foodHourUpgrade"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/oreImage2"
+                android:height="20dp"
+                android:maxHeight="20dp"
+                android:text="@string/blank"
+                android:textColor="#ffffff"
+                android:textSize="20dp" />
+
+            <!-- The Water section. -->
+
+            <ImageView
+                android:id="@+id/waterImage2"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_below="@id/oreImage2"
+                android:contentDescription="@string/blank"
+                android:src="@drawable/water" />
+
+            <TextView
+                android:id="@+id/waterHourCost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/waterImage2"
+                android:layout_alignTop="@id/waterImage2"
+                android:layout_below="@id/oreHourUpgrade"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/waterImage2"
+                android:height="20dp"
+                android:maxHeight="20dp"
+                android:text="@string/blank"
+                android:textColor="#ffffff"
+                android:textSize="20dp" />
+
+            <!-- The Energy section. -->
+
+            <ImageView
+                android:id="@+id/energyImage2"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_below="@id/waterImage2"
+                android:contentDescription="@string/blank"
+                android:src="@drawable/energy" />
+
+            <TextView
+                android:id="@+id/energyHourCost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/energyImage2"
+                android:layout_alignTop="@id/energyImage2"
+                android:layout_below="@id/waterHourUpgrade"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/energyImage2"
+                android:height="20dp"
+                android:maxHeight="20dp"
+                android:text="@string/blank"
+                android:textColor="#ffffff"
+                android:textSize="20dp" />
+
+            <!-- The Waste section. -->
+
+            <ImageView
+                android:id="@+id/wasteImage2"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_below="@id/energyImage2"
+                android:contentDescription="@string/blank"
+                android:src="@drawable/waste" />
+
+            <TextView
+                android:id="@+id/wasteHourCost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/wasteImage2"
+                android:layout_alignTop="@id/wasteImage2"
+                android:layout_below="@id/energyHourUpgrade"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/wasteImage2"
+                android:height="20dp"
+                android:maxHeight="20dp"
+                android:text="@string/blank"
+                android:textColor="#ffffff"
+                android:textSize="20dp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</ScrollView>

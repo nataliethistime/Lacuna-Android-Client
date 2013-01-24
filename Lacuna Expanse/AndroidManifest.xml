@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lacunaexpanse.LacunaAndroidClient"
-    android:versionCode="006"
-    android:versionName="Beta 0.0.6" >
+    android:versionCode="007"
+    android:versionName="Beta 0.0.7" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -46,6 +46,11 @@
         <activity
             android:name=".Mail.ViewMail"
             android:label="@string/title_activity_view_mail"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name=".PlanetViews.Buildings.BuildingsWrapper"
+            android:label="@string/title_activity_buildings_wrapper"
             android:theme="@style/AppTheme" >
         </activity>
     </application>

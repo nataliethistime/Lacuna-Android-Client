@@ -20,5 +20,6 @@
     <string name="mail">Mail</string>
     <string name="title_activity_mail">Mail</string>
     <string name="title_activity_view_mail">ViewMail</string>
+    <string name="title_activity_buildings_wrapper">BuildingsWrapper</string>
 
 </resources>
