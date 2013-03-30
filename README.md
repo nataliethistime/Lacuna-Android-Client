@@ -1,3 +1,6 @@
+I'm done with this project, it was an experiment and it failed.
+===============================================================
+
 Lacuna-Android-Client
 =====================
 
