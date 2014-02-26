@@ -1,5 +1,5 @@
-I'm done with this project, it was an experiment and it failed.
-===============================================================
+NOTE: not in development anymore. :(
+====================================
 
 Lacuna-Android-Client
 =====================
@@ -9,8 +9,7 @@ Android client for The Lacuna Expanse. Source code for the project is contained 
 Authors & Contributors
 ======================
 
-	-The Vasari! (thevasari@gmail.com)
-	-Anyone else, feel free to add you name here ;)
+	-The Vasari! (nmccallum7@gmail.com)
 
 Instructions for setting up Eclipse:
 ====================================
