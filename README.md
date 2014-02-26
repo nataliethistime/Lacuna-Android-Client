@@ -9,7 +9,7 @@ Android client for The Lacuna Expanse. Source code for the project is contained 
 Authors & Contributors
 ======================
 
-	-The Vasari! (nmccallum7@gmail.com)
+	-Vasari (nmccallum7@gmail.com)
 
 Instructions for setting up Eclipse:
 ====================================
