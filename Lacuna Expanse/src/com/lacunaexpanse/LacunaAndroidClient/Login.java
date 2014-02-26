@@ -50,11 +50,9 @@ public class Login extends Activity {
 
 				// Get entered empire name and password
 				EditText empireNameField = (EditText) findViewById(R.id.empireNameField);
-				empireNameField.setText("The New Vasari Collective");
 				String empireName = empireNameField.getText().toString();
 				
 				EditText passWordField = (EditText) findViewById(R.id.passWordField);
-				passWordField.setText("VeyronDriver-168");
 				String empirePassword = passWordField.getText().toString();
 
 				// Get selected item from Spinner
