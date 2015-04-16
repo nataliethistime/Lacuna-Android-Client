@@ -1,18 +1,9 @@
-NOTE: not in development anymore. :(
-====================================
+# Lacuna-Android-Client
 
-Lacuna-Android-Client
-=====================
+Android client for The Lacuna Expanse. Source code for the project is contained in the 'Lacuna Expanse' directory. **Note:** *this project is no longer being worked on. :pensive:*
 
-Android client for The Lacuna Expanse. Source code for the project is contained in the 'Lacuna Expanse' directory.
 
-Authors & Contributors
-======================
-
-	-1vasari (onevasari@gmail.com)
-
-Instructions for setting up Eclipse:
-====================================
+# Instructions For Setting Up Eclipse
 
 1) Follow the following Youtube videos for setting up Eclipse and the Android Emulator:
 
@@ -40,8 +31,7 @@ Instructions for setting up Eclipse:
 	K) Then at the top of this window select 'Import existing projects', hit next.
 	L) Select project named 'Lacuna Expanse' and 'Library', hit finish. You now have the Lacuna-Android-Client project loaded into your Eclipse set up!
 
-Overview of using EGit:
-=======================
+# Overview of using EGit
 
 1) Committing and Pushing to the online repo:
 
@@ -58,3 +48,7 @@ Overview of using EGit:
 	J) EGit will do some checking, then all you need to do is hit 'Finish'.
 	K) A window will appear on the screen displaying a progress bar, that is EGit pushing to the online repo. Once that completes It will display what it did, simply hit 'Ok'.
 	L) And you're finished!
+
+# License
+
+This project is made with love, under the MIT license, by [@1vasari](https://twitter.com/1vasari). :heart:
